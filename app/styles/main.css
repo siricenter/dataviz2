@@ -12,3 +12,16 @@ body {
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #333;
 }
+
+.main-menu a {
+  color: #fff;
+}
+.main-menu a:hover {
+  color: #ED13C9;
+}
+
+.test-card {
+  box-sizing: border-box;
+  width: 50%;
+  flex-wrap: wrap;
+}
