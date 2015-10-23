@@ -100,24 +100,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <img src="images/MotionChart.jpg" style="width:100%">
               </paper-material>
 
-              <div class="test-card">
-              <paper-material elevation="1">
-                <p class="paper-font-body2">This is another card.</p>
-              </paper-material>
-              </div>
-
-              <div class="test-card">
-              <paper-material elevation="1">
-                <p class="paper-font-body2">This is another card.</p>
-              </paper-material>
-              </div>
-
-              <div class="test-card">
-              <paper-material elevation="1">
-                <p class="paper-font-body2">This is another card.</p>
-              </paper-material>
-              </div>
-
+              <lavu-grid>
+                <lavu-cell span-lg="8" span-md="6" span-sm="8" span-xs="4" class="test-card">
+                  <paper-material elevation="1">
+                    <!-- placeholder for a chart-tile component -->
+                    <img src="images/pie_chart.png" style="width:100%">
+                  </paper-material>
+                </lavu-cell>
+                <lavu-cell span-lg="8" span-md="6" span-sm="8" span-xs="4" class="test-card">
+                  <paper-material elevation="1">
+                    <!-- placeholder for a chart-tile component -->
+                    <img src="images/bar_line_chart.png" style="width:100%">
+                  </paper-material>
+                </lavu-cell>
+                <lavu-cell span-lg="8" span-md="6" span-sm="8" span-xs="4" class="test-card">
+                  <paper-material elevation="1">
+                    <!-- placeholder for a chart-tile component -->
+                    <img src="images/map_chart.jpg" style="width:100%">
+                  </paper-material>
+                </lavu-cell>
+                <lavu-cell span-lg="8" span-md="6" span-sm="8" span-xs="4" class="test-card">
+                  <paper-material elevation="1">
+                    <!-- placeholder for a chart-tile component -->
+                    <img src="images/radar_chart.jpg" style="width:100%">
+                  </paper-material>
+                </lavu-cell>
+              </lavu-grid>
             </section>
 
             <section data-route="about">
@@ -135,6 +143,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </section>
 
           </iron-pages>
+
+          <!-- footer -->
+              <universal-footer>
+                <div multicol>
+                  <div col>
+                    <div row title>People Working On This</div>
+                    <div row><a href="rbdcenter.org">RBDC</a></div>
+                    <div row><a href="byui.edu">BYU-Idaho</a></div>
+                    <div row><a href="asu.edu">ASU</a></div>
+                  </div>
+                  <div col>
+                    <div row title>Want To Help?</div>
+                    <div row>Email us: <a href="mailto:info@rbdcenter.org">info@rbdcenter.org</a></div>
+                  </div>
+                  <div col>
+                    <div row title>More Resources</div>
+                    <div row><a href="#">IPEDS</a></div>
+                  </div>
+                </div>
+                <div copyright-center>© 2015 Research &amp; Business Development Center</div>
+              </universal-footer>
         </div>
       </paper-scroll-header-panel>
     <!-- </paper-drawer-panel> -->
