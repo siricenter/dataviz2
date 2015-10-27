@@ -20,8 +20,6 @@ body {
   color: #ED13C9;
 }
 
-/*.test-card {
-  box-sizing: border-box;
-  width: 50%;
-  flex-wrap: wrap;
-}*/
+#motionChartPlaceholder {
+  height: 500px;
+}

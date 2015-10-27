@@ -62,7 +62,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- <paper-drawer-panel id="paperDrawerPanel"> -->
 
       <!-- Main Area -->
-      <paper-scroll-header-panel main condenses keep-condensed-header>
+      <paper-scroll-header-panel main condenses>
 
         <!-- Main Toolbar -->
         <paper-toolbar id="mainToolbar" class="tall">
@@ -84,8 +84,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </div>
 
           <!-- Application sub title -->
-          <div class="bottom bottom-container center horizontal layout">
-            <div class="bottom-title paper-font-subhead">Making sense of higher education information</div>
+          <div class="bottom bottom-container center horizontal layout flex">
+            <div class="bottom-title paper-font-subhead flex">Making sense of higher education information</div>
           </div>
 
         </paper-toolbar>
@@ -97,35 +97,79 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <section data-route="home" class="flex">
               <paper-material elevation="1">
                 <!-- placeholder for a chart-tile component featuring the motion chart -->
-                <img src="images/MotionChart.jpg" style="width:100%">
+                <google-chart id="motionChartPlaceholder" type="bubble" options="{}"
+                                        data='[ ["ID", "Life Expectancy", "Fertility Rate", "Region", "Population"],
+                                                   ["CAN", 80.66, 1.67, "North America", 33739900],
+                                                   ["DEU", 79.84, 1.36, "Europe",        81902307],
+                                                   ["DNK", 78.6,  1.84, "Europe",        5523095],
+                                                   ["EGY", 72.73, 2.78, "Middle East",   79716203],
+                                                   ["GBR", 80.05, 2,    "Europe",        61801570],
+                                                   ["IRN", 72.49, 1.7,  "Middle East",   73137148],
+                                                   ["IRQ", 68.09, 4.77, "Middle East",   31090763],
+                                                   ["ISR", 81.55, 2.96, "Middle East",   7485600],
+                                                   ["RUS", 68.6,  1.54, "Europe",        141850000],
+                                                   ["USA", 78.09, 2.05, "North America", 307007000] ]'>
+                </google-chart>
               </paper-material>
 
               <lavu-grid>
                 <lavu-cell span-lg="8" span-md="6" span-sm="8" span-xs="4" class="test-card">
                   <paper-material elevation="1">
                     <!-- placeholder for a chart-tile component -->
-                    <img src="images/pie_chart.png" style="width:100%">
+                    <google-chart
+                      type='pie'
+                      id='selection-chart'
+                      options='{"title": "Distribution of days in 2001Q1"}'
+                      cols='[{"label":"Month", "type":"string"}, {"label":"Days", "type":"number"}]'
+                      rows='[ ["Jan", 31],["Feb", 28],["Mar", 31],["Apr", 30],["May", 31],["Jun", 30] ]'>
+                    </google-chart>
                   </paper-material>
                 </lavu-cell>
                 <lavu-cell span-lg="8" span-md="6" span-sm="8" span-xs="4" class="test-card">
                   <paper-material elevation="1">
                     <!-- placeholder for a chart-tile component -->
-                    <img src="images/bar_line_chart.png" style="width:100%">
+                    <google-chart type="combo" options='{"seriesType": "bars", "series":{"2": {"type": "line"}}}'
+                                            data='[ ["Day", "A", "B", "C"],
+                                                       ["Mon", 20, 45, 28],
+                                                       ["Tue", 31, 66, 38],
+                                                       ["Wed", 50, 80, 55],
+                                                       ["Thu", 77, 50, 77],
+                                                       ["Fri", 68, 15, 66] ]'>
+                    </google-chart>
                   </paper-material>
                 </lavu-cell>
                 <lavu-cell span-lg="8" span-md="6" span-sm="8" span-xs="4" class="test-card">
                   <paper-material elevation="1">
                     <!-- placeholder for a chart-tile component -->
-                    <img src="images/map_chart.jpg" style="width:100%">
+                    <google-chart type="geo" data='[ ["Country", "Popularity"],
+                                                                         ["Germany", 200],
+                                                                         ["United States", 300],
+                                                                         ["Brazil", 400],
+                                                                         ["Canada", 500],
+                                                                         ["France", 600],
+                                                                         ["RU", 700] ]'>
+                    </google-chart>
                   </paper-material>
                 </lavu-cell>
                 <lavu-cell span-lg="8" span-md="6" span-sm="8" span-xs="4" class="test-card">
                   <paper-material elevation="1">
                     <!-- placeholder for a chart-tile component -->
-                    <img src="images/radar_chart.jpg" style="width:100%">
+                    <google-chart type="stepped-area" options='{"title": "Days in a month"}'
+                                            cols='[ {"label": "Month", "type": "string"},{"label": "Days", "type": "number"} ]'
+                                            rows='[ ["Jan", 31],["Feb", 28],["Mar", 31],["Apr", 30],["May", 31],["Jun", 30] ]'>
+                    </google-chart>
+                    <!-- <img src="images/radar_chart.jpg" style="width:100%"> -->
                   </paper-material>
                 </lavu-cell>
               </lavu-grid>
+
+                    <google-chart
+                      type='pie'
+                      id='selection-chart'
+                      options='{"title": "Distribution of days in 2001Q1"}'
+                      cols='[{"label":"Month", "type":"string"}, {"label":"Days", "type":"number"}]'
+                      rows='[["Jan", 31],["Feb", 28],["Mar", 31],["Apr", 30],["May", 31],["Jun", 30]]'>
+                    </google-chart>
             </section>
 
             <section data-route="about">

@@ -57,6 +57,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     height: 100%;
   }
 
+  paper-scroll-header-panel {
+  --paper-scroll-header-panel-full-header: {
+    background-color: var(--default-primary-color);
+    background-image: url(images/light_bulb.jpg);
+  };
+  --paper-scroll-header-panel-condensed-header: {
+    background-color: var(--dark-primary-color);
+  };
+}
+
   paper-material {
     border-radius: 2px;
     height: 100%;
@@ -105,6 +115,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     transform-origin: left center;
   }
 
+  paper-toolbar {
+    --paper-toolbar-background: none;
+    /*background-image: url(https://lorempixel.com/1200/400/abstract);*/
+  }
+
   #mainToolbar .middle-container  {
     height: 100%;
     margin-left: 48px;
@@ -135,6 +150,12 @@ universal-footer {
 universal-footer a {
   color: var(--text-primary-color);
 }
+
+google-chart {
+  width: 100%;
+}
+
+
   /* Breakpoints */
 
   /* Small */
