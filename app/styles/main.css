@@ -20,6 +20,10 @@ body {
   color: #ED13C9;
 }
 
+.content {
+    background-image: url(images/seamless_cotton.png) repeat;
+  }
+
 #motionChartPlaceholder {
   height: 500px;
 }

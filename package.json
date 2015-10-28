@@ -36,5 +36,10 @@
   },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "dependencies": {
+    "colorspace": "^1.0.1",
+    "enabled": "^1.0.1",
+    "kuler": "0.0.0"
   }
 }

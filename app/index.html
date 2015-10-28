@@ -154,22 +154,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <lavu-cell span-lg="8" span-md="6" span-sm="8" span-xs="4" class="test-card">
                   <paper-material elevation="1">
                     <!-- placeholder for a chart-tile component -->
-                    <google-chart type="stepped-area" options='{"title": "Days in a month"}'
-                                            cols='[ {"label": "Month", "type": "string"},{"label": "Days", "type": "number"} ]'
-                                            rows='[ ["Jan", 31],["Feb", 28],["Mar", 31],["Apr", 30],["May", 31],["Jun", 30] ]'>
+                    <google-chart type="stepped-area" options='{"title": "Family Stats"}'
+                                            data='scripts/tstTXT.txt'>
                     </google-chart>
                     <!-- <img src="images/radar_chart.jpg" style="width:100%"> -->
                   </paper-material>
                 </lavu-cell>
               </lavu-grid>
-
-                    <google-chart
-                      type='pie'
-                      id='selection-chart'
-                      options='{"title": "Distribution of days in 2001Q1"}'
-                      cols='[{"label":"Month", "type":"string"}, {"label":"Days", "type":"number"}]'
-                      rows='[["Jan", 31],["Feb", 28],["Mar", 31],["Apr", 30],["May", 31],["Jun", 30]]'>
-                    </google-chart>
             </section>
 
             <section data-route="about">
