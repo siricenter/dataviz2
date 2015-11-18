@@ -53,6 +53,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- will be replaced with elements/elements.vulcanized.html -->
   <link rel="import" href="elements/elements.html">
   <!-- endreplace-->
+  <script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
+  <script type="text/javascript" src="scripts/database_seeds/tstJSON.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/institutions_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/expenditures_seed.json"></script>
 </head>
 
 <body unresolved class="fullbleed layout vertical">
@@ -95,6 +99,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
             <section data-route="home" class="flex">
+            <paper-material elevation="1" class="layout horizontal justify space-between">
+              <paper-input id="dataNode" label="dataNode">test</paper-input>
+              <paper-input id="dataFile" label="dataFile"></paper-input>
+              <paper-button raised on-tap="importData">import file</paper-button>
+            </paper-material>
               <paper-material elevation="1">
                 <!-- placeholder for a chart-tile component featuring the motion chart -->
                 <google-chart id="motionChartPlaceholder" type="bubble" options="{}"
@@ -225,6 +234,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
   <!-- endbuild-->
+
 </body>
 
 </html>

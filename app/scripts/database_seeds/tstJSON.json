@@ -1,0 +1,43 @@
+tst_seed =
+[
+    {
+        "UNITID": "100654",
+        "Instruction": "17077455",
+        "Research and Public Service": "19163495",
+        "Academic and Institutional Support, and Student Services": "27887245",
+        "Total Expenses": "82480516",
+        "Year": "2001"
+    },
+    {
+        "UNITID": "100663",
+        "Instruction": "173492320",
+        "Research and Public Service": "288963668",
+        "Academic and Institutional Support, and Student Services": "105766570",
+        "Total Expenses": "628941868",
+        "Year": "2001"
+    },
+    {
+        "UNITID": "100706",
+        "Instruction": "29301748",
+        "Research and Public Service": "38208224",
+        "Academic and Institutional Support, and Student Services": "18406615",
+        "Total Expenses": "106401944",
+        "Year": "2001"
+    },
+    {
+        "UNITID": "100724",
+        "Instruction": "20618397",
+        "Research and Public Service": "3833320",
+        "Academic and Institutional Support, and Student Services": "23240186",
+        "Total Expenses": "70326197",
+        "Year": "2001"
+    },
+    {
+        "UNITID": "100733",
+        "Instruction": "0",
+        "Research and Public Service": "0",
+        "Academic and Institutional Support, and Student Services": "7070039",
+        "Total Expenses": "8362911",
+        "Year": "2001"
+    }
+]
