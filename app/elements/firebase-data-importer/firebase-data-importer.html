@@ -29,9 +29,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <firebase-collection id="fbColl"
+      order-by-child="unitid"
+      location="{{ref}}"
+      data="{{items}}"></firebase-collection>
+
     <paper-material elevation="1">
-      <paper-input id="dataNode" label="dataNode"></paper-input>
-      <paper-input id="dataFile" label="dataFile"></paper-input>
+      <paper-input id="dataNode" label="Firebase Node"></paper-input>
+      <paper-input id="dataFile" label="Data Location"></paper-input>
       <paper-button raised on-tap="importData">import file<iron-icon icon="file-upload"></iron-icon></paper-button>
     </paper-material>
   </template>
@@ -43,26 +48,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'firebase-data-importer',
 
       properties: {
-        firebaseRef: {
+        baseRef: {
+          type: String,
+          value: '',
+          notify: true
+        },
+        ref: {
           type: String,
           value: '',
           notify: true
         }
       },
 
+      buildRef: function(baseRef) {
+        return baseRef + this.$.dataNode.value //TODO: account for people not putting trailing or beginning slashes. Also, account for data coming from REST/API calls
+      },
 
-
-      // importData: function() {
-      //   var file = document.querySelector('#dataFile').value
-      //   var node = document.querySelector('#dataNode').value
-      //   app.importDatabaseFile(node,file)
-      // }
-
-      importData: function(node, data) {
+      importData: function() {
+        var fbColl = this.$.fbColl
         var data = window[this.$.dataFile.value]
-        var node = this.$.dataNode.value
+        this.ref = this.buildRef(this.baseRef)
         for (var i = 0; i < data.length; i++) {
-          this.firebaseRef.child(node).push(data[i])
+          fbColl.add(data[i])
         }
       }
     });
