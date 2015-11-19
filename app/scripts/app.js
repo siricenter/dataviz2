@@ -63,18 +63,4 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
   };
 
-  app.importData = function() {
-    var file = document.querySelector('#dataFile').value
-    var node = document.querySelector('#dataNode').value
-    app.importDatabaseFile(node,file)
-  }
-
-  app.importDatabaseFile = function(node, data) {
-    var dataRef = new Firebase("https://rbdcdataviz.firebaseio.com/ipedsData/")
-    data = window[data]
-    for (var i = 0; i < data.length; i++) {
-      dataRef.child(node).push(data[i])
-    }
-  }
-
 })(document);
