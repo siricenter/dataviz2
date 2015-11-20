@@ -31,7 +31,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-collection id="fbColl"
       location="{{ref}}"
       data="{{items}}"
-      on-data-changed="buildChartData"></firebase-collection>
+      ></firebase-collection>
 
     <paper-material elevation="1">
       <h4>States</h4>
@@ -41,7 +41,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <google-chart id="exampleChart"
                               type="{{chartType}}"
                               options="{}"
-                              data="{{chartData}}">
+                              data="{{chartData}}"
+                              >
       </google-chart>
       <div id="inputs">
         <paper-input label="Data Node" value="{{firebaseNode}}"></paper-input>
@@ -57,7 +58,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'chart-example',
 
-      properties: {
+      properties: {  //you can add an observer to the properties
         baseRef: {
           type: String,
           value: '',
@@ -99,6 +100,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       buildChartData: function(e) {
         console.log(e)
+        console.log(this.items)
       },
       buildChart: function() {
         this.ref = this.buildRef(this.baseRef)
