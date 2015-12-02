@@ -8,6 +8,10 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+
+
+<!-- Mutation, paper-spinner, firebase collection finished, dom repeat finished, dom ready  -->
+
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="chart-example">
@@ -17,6 +21,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block;
       }
 
+      google-chart {
+        height: 500px;
+        width: auto;
+      }
       #inputs {
         @apply(--layout-horizontal);
         @apply(--layout-around-justified);
@@ -29,25 +37,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
     <firebase-collection id="fbColl"
+      order-by-child="{{orderBy}}"
       location="{{ref}}"
-      data="{{items}}"
-      ></firebase-collection>
+      data="{{dataPoints}}"
+      on-firebase-value="aggregation"></firebase-collection>
 
     <paper-material elevation="1">
-      <h4>States</h4>
-      <template is="dom-repeat" items="{{items}}">
-        <p>{{item.STABBR}}</p>
-      </template>
-      <google-chart id="exampleChart"
-                              type="{{chartType}}"
-                              options="{}"
-                              data="{{chartData}}"
-                              >
+      <h2>States</h2>
+      <google-chart
+        type="{{chartType}}"
+        id='selection-chart'
+        cols='[{"label":"Type", "type":"string"}, {"label":"Number", "type":"number"}]'
+        rows="{{parser}}"
+        options="{{chosenOption}}">
       </google-chart>
+<!-- <h1>{{parser}}</h1> -->
       <div id="inputs">
         <paper-input label="Data Node" value="{{firebaseNode}}"></paper-input>
-        <paper-input label="Equal To" value="{{equalTo}}"></paper-input>
+        <paper-input label="Equal To" value="{{orderBy}}"></paper-input>
         <paper-button raised on-tap="buildChart">Build Chart <iron-icon icon="arrow-forward"></iron-icon></paper-button>
+        <paper-button raised on-tap="makePie">PIE <iron-icon icon="arrow-forward"></iron-icon></paper-button>
+        <paper-button raised on-tap="makeBar">BAR <iron-icon icon="arrow-forward"></iron-icon></paper-button>
+        <paper-button raised on-tap="makeGeo">GEO <iron-icon icon="arrow-forward"></iron-icon></paper-button>
       </div>
     </paper-material>
   </template>
@@ -58,9 +69,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'chart-example',
 
-      properties: {  //you can add an observer to the properties
+      properties: {
         baseRef: {
           type: String,
+          value: '',
+          notify: true
+        },
+        parser: {
+          type: Object,
+          value: [ ["ID", 2] ],
+          notify: true
+        },
+        chosenOption: {
+          type: Object,
           value: '',
           notify: true
         },
@@ -69,9 +90,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: '',
           notify: true
         },
+         dataPoints: {
+           type: Object,
+         },
         chartType: {
           type: String,
-          Value: 'pie',
+          value: 'pie',
           notify: true
         },
         chartData: {
@@ -80,7 +104,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         orderBy: {
           type: String,
-          value: 'UNITID',
+          value: 'STABBR',
           notify: true
         },
         equalTo: {
@@ -90,7 +114,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         firebaseNode: {
           type: String,
-          value: 'gradRates',
+          value: 'institutions',
+          notify: true
+        },
+        chartOptions: {
+          type: Object,
+          value: {
+            'pie': {
+              "pieSliceBorderColor": "none",
+              "pieSliceText": "none"
+            },
+            'bar': {
+              // bar options
+            },
+            'column': {
+              // bar options
+            },
+            'geo': {
+              "region": "US", "resolution": "provinces", "colorAxis": {"colors": ["grey", "#f90", "#f00"]},
+              "backgroundColor": "#81d4fa",
+              "datalessRegionColor": "#ddd",
+              "defaultColor": "#f5f5f5"
+            }
+          },
           notify: true
         }
       },
@@ -99,15 +145,71 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return baseRef + this.firebaseNode //TODO: account for people not putting trailing or beginning slashes. Also, account for data coming from REST/API calls
       },
       buildChartData: function(e) {
-        console.log(e)
-        console.log(this.items)
+
       },
+
+      aggregation: function(e) {
+        var category = this.orderBy
+        var FBR = this.dataPoints;
+        var aggResult = [];
+        var currentItem = '';
+        var aggIndex = 0;
+        var parser = [];
+
+        for (var i = 0; i < FBR.length; i++) {
+          if (!currentItem) {
+            aggResult.push({type:FBR[i][category], number:1}); 
+            currentItem = FBR[i][category];
+          }
+          else if (currentItem === FBR[i][category]) {
+            aggResult[aggIndex]["number"]++;
+            currentItem = FBR[i][category];
+          }
+          else {
+            aggResult.push({type:FBR[i][category], number:1});
+            currentItem = FBR[i][category];
+            aggIndex++;
+            parser.push([aggResult[aggIndex - 1]["type"], aggResult[aggIndex - 1]["number"]])
+          }
+        }
+        parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]])
+        // console.log(aggResult);
+        //var chartType
+       
+        this.chosenOption = this.chartOptions[this.chartType];
+
+         console.log(this.chartOptions.pie);
+        // var chart = document.querySelector('#selection-chart');
+        // chart.drawChart();
+        
+        this.parser = parser;
+      },
+
+      makePie: function() {
+        this.chartType = "pie";
+        this.chosenOption = this.chartOptions[this.chartType];
+        var chart = document.querySelector('#selection-chart');
+        chart.drawChart();
+      },
+
+      makeBar: function() {
+        this.chartType = "column";
+        this.chosenOption = this.chartOptions[this.chartType];
+        var chart = document.querySelector('#selection-chart');
+        chart.drawChart();
+      },
+
+      makeGeo: function() {
+        this.chartType = "geo";
+        this.chosenOption = this.chartOptions[this.chartType];
+        var chart = document.querySelector('#selection-chart');
+        chart.drawChart();
+      },
+
       buildChart: function() {
         this.ref = this.buildRef(this.baseRef)
-        console.log(this.items)
-        this.chartData = 0;
+        this.chartData = this.data;
       }
-
     });
   })();
   </script>
