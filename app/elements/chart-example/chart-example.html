@@ -12,6 +12,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <!-- Mutation, paper-spinner, firebase collection finished, dom repeat finished, dom ready  -->
 
+<!-- *****************************************************************************
+*
+*                                   EXCUSE MY MESS!!
+*                     I am currently working on another aspect of this
+*           element. There will be A LOT of crazy monster code that does nothing.
+*                        apologies in advance for the following...
+*
+********************************************************************************-->
+
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="chart-example">
@@ -36,11 +45,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: var(--text-primary-color);
       }
     </style>
-    <firebase-collection id="fbColl"
-      order-by-child="{{orderBy}}"
+    <!-- <firebase-collection id="fbExp"
       location="{{ref}}"
-      data="{{dataPoints}}"
-      on-firebase-value="aggregation"></firebase-collection>
+      order-by-child="UNITID"
+      equal-to="{{equalTo}}"
+      start-at="{{startAt}}"
+      end-at="{{endAt}}"
+      data="{{expData}}"
+      on-firebase-value="gradSnap"></firebase-collection> -->
+
+     <!--  <firebase-collection id="fbGrad"
+      location="{{gradRef}}"
+      order-by-child="UNITID"
+      equal-to="{{equalTo}}"
+      start-at="{{startAt}}"
+      end-at="{{endAt}}"
+      data="{{gradData}}"
+     on-firebase-value="gradSnap"></firebase-collection> -->
+
+      <firebase-collection id="fbInst"
+      location="{{instRef}}"
+      order-by-child="{{orderBy}}"
+      equal-to="{{equalTo}}"
+      data="{{instData}}"
+      on-firebase-value="aggregationBasic"></firebase-collection>
 
     <paper-material elevation="1">
       <h2>States</h2>
@@ -77,7 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         parser: {
           type: Object,
-          value: [ ["ID", 2] ],
+          value: '',
           notify: true
         },
         chosenOption: {
@@ -90,7 +118,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: '',
           notify: true
         },
-         dataPoints: {
+        gradRef: {
+          type: String,
+          value: '',
+          notify: true
+        },
+        instRef: {
+          type: String,
+          value: '',
+          notify: true
+        },
+        expRef: {
+          type: String,
+          value: '',
+          notify: true
+        },
+        expData: {
+           type: Object,
+         },
+        gradData: {
+           type: Object,
+         },
+        instData: {
            type: Object,
          },
         chartType: {
@@ -107,9 +156,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: 'STABBR',
           notify: true
         },
+        startAt: {
+          type: Number,
+          value: '2',
+          notify: true
+        },
+        endAt: {
+          type: Number,
+          value: '3',
+          notify: true
+        },
         equalTo: {
           type: String,
-          value: '100654',
+          value: null,
           notify: true
         },
         firebaseNode: {
@@ -122,17 +181,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: {
             'pie': {
               "pieSliceBorderColor": "none",
+              "backgroundColor": "none",
               "pieSliceText": "none"
             },
             'bar': {
+              "backgroundColor": "none"
               // bar options
             },
             'column': {
+              "backgroundColor": "none"
               // bar options
             },
             'geo': {
               "region": "US", "resolution": "provinces", "colorAxis": {"colors": ["grey", "#f90", "#f00"]},
-              "backgroundColor": "#81d4fa",
+              "backgroundColor": "none",
               "datalessRegionColor": "#ddd",
               "defaultColor": "#f5f5f5"
             }
@@ -140,17 +202,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           notify: true
         }
       },
+        //array.slice(indexOf(some sub property of where its 3))
+      gradSnap: function() {
+        var category = this.orderBy;
+        var FBR = this.instData;
+        var grad2 = [];
+        var grad3 = [];
+        var renderedData = [];
+        var dividedData = 0;
 
-      buildRef: function(baseRef) {
-        return baseRef + this.firebaseNode //TODO: account for people not putting trailing or beginning slashes. Also, account for data coming from REST/API calls
+        console.log("working");
+      //take the object, add new property gradrate, then push whole object.
+      var pos = FBR.map(function(e) { return e.GRTYPE; }).indexOf('3');
+      grad2 = FBR.slice(0, pos);
+      grad3 = FBR.slice(pos);
+      for (var i = 0; i < grad3.length; i++) {
+        dividedData = grad3[i]["GRTOTLT"] / grad2[i]["GRTOTLT"];
+        dividedData = dividedData.toFixed(4);
+        dividedData = dividedData * 1;
+        FBR[i].GRADRATE = dividedData;
+        //FBR[i].push()
+      }
+      console.log(FBR);
       },
+
+      
       buildChartData: function(e) {
 
       },
 
-      aggregation: function(e) {
+      aggregation: function() {
+
+        console.log("WORKING");
+        //this fuction will figure out how many values need to be aggregated, and calls the appropriate function
+
+      },
+
+      //THIS IS THE WORKING CODE TO MAKE THE BASIC CHARTS. basic aggregation, one value.
+      aggregationBasic: function(e) {
         var category = this.orderBy
-        var FBR = this.dataPoints;
+        var FBR = this.instData;
         var aggResult = [];
         var currentItem = '';
         var aggIndex = 0;
@@ -168,11 +259,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           else {
             aggResult.push({type:FBR[i][category], number:1});
             currentItem = FBR[i][category];
+            parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
             aggIndex++;
-            parser.push([aggResult[aggIndex - 1]["type"], aggResult[aggIndex - 1]["number"]])
           }
         }
-        parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]])
+        parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
         // console.log(aggResult);
         //var chartType
        
@@ -185,6 +276,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.parser = parser;
       },
 
+      //Name: institutions=>STABBR, X: expenditures=>total, Y: gradRates=>, Color: institutions=>YEAR, Size: expenditures=>TOTAL  
+
+      aggregationAdvanced: function(e) {
+        var xData = '';
+        var yData = '';
+        var name = '';
+        var FBR = this.dataPoints;
+        var aggResult = [];
+        var currentItem = '';
+        var aggIndex = 0;
+        var parser = [];
+
+        for (var i = 0; i < FBR.length; i++) {
+          if (!currentItem) {
+            aggResult.push({title:FBR[i][name], xData:FBR[i][xData], yData:FBR[i][yData], color:color, size:1}); 
+            currentItem = FBR[i][category];
+          }
+          else if (currentItem === FBR[i][category]) {
+            aggResult[aggIndex]["size"]++;
+            currentItem = FBR[i][category];
+          }
+          else {
+            aggResult.push({title:FBR[i][name], xData:FBR[i][xData], yData:FBR[i][yData], color:color, size:1}); 
+            currentItem = FBR[i][category];
+            parser.push([ aggResult[aggIndex]["name"], 
+                          aggResult[aggIndex]["xData"], 
+                          aggResult[aggIndex]["yData"], 
+                          aggResult[aggIndex]["color"],
+                          aggResult[aggIndex]["size"] ])
+            aggIndex++;
+          }
+        }
+        parser.push([ aggResult[aggIndex]["name"], 
+                      aggResult[aggIndex]["xData"], 
+                      aggResult[aggIndex]["yData"], 
+                      aggResult[aggIndex]["color"],
+                      aggResult[aggIndex]["size"] ])
+        // console.log(aggResult);
+        //var chartType
+
+
+       
+        this.chosenOption = this.chartOptions[this.chartType];
+
+         console.log(this.chartOptions.pie);
+        // var chart = document.querySelector('#selection-chart');
+        // chart.drawChart();
+        
+        this.parser = parser;
+      },
+
+
+      // could be more efficient
       makePie: function() {
         this.chartType = "pie";
         this.chosenOption = this.chartOptions[this.chartType];
@@ -206,8 +350,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         chart.drawChart();
       },
 
-      buildChart: function() {
-        this.ref = this.buildRef(this.baseRef)
+      buildRef: function(baseRef) {
+        return baseRef + this.firebaseNode //TODO: account for people not putting trailing or beginning slashes. Also, account for data coming from REST/API calls
+      },
+
+      buildChart: function() {  //Some Hardcoded information, need to change as soon as possible
+        this.instRef = this.buildRef(this.baseRef);
+        // this.firebaseNode = 'institutions'
+        // this.instRef = this.buildRef(this.baseRef);
+        // this.firebaseNode = 'expenditures'
+        // this.expRef = this.buildRef(this.baseRef);
         this.chartData = this.data;
       }
     });

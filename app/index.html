@@ -54,9 +54,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="elements/elements.html">
   <!-- endreplace-->
   <script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
-  <script type="text/javascript" src="scripts/database_seeds/tstJSON.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/dummy_seed.json"></script>
   <script type="text/javascript" src="scripts/database_seeds/institutions_seed.json"></script>
   <script type="text/javascript" src="scripts/database_seeds/expenditures_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2002_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2003_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2004_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2005_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2006_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2007_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2008_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2009_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2010_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2011_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2012_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/GR2013_seed.json"></script>
+
+
 </head>
 
 <body unresolved class="fullbleed layout vertical">
@@ -100,11 +114,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <section data-route="home" class="flex">
               <firebase-data-importer base-ref="https://rbdcdataviz.firebaseio.com/ipedsData/"></firebase-data-importer>
+              <chart-specs chart-selection="{{chart-selection}}"></chart-specs>
               <chart-example base-ref="https://rbdcdataviz.firebaseio.com/ipedsData/"></chart-example>
               
               <paper-material elevation="1">
                 <!-- placeholder for a chart-tile component featuring the motion chart -->
+                <!-- Name, X, Y, Color, Size -->
                 <google-chart id="motionChartPlaceholder" type="bubble" options="{}"
+
                                         data='[ ["ID", "Life Expectancy", "Fertility Rate", "Region", "Population"],
                                                    ["CAN", 80.66, 1.67, "North America", 33739900],
                                                    ["DEU", 79.84, 1.36, "Europe",        81902307],
@@ -115,7 +132,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                    ["IRQ", 68.09, 4.77, "Middle East",   31090763],
                                                    ["ISR", 81.55, 2.96, "Middle East",   7485600],
                                                    ["RUS", 68.6,  1.54, "Europe",        141850000],
-                                                   ["USA", 78.09, 2.05, "North America", 307007000] ]'>
+                                                   ["USA", 78.09, 2.05, "North America", 307007000],
+                                                   ["TEST", 80.09, 4.5, "United Alien Confederacy", 307007000] ]'>
                 </google-chart>
               </paper-material>
 
