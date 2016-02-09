@@ -22,7 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}
 
             --paper-dropdown-menu-icon: {
-             	background-color: var(--default-tertiary-color);
+             	background-color: #ca2918;
              	color: rgba(0,0,0,0.4);
              	height: 35px;
              	width: 40px;
@@ -35,7 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
 		paper-dropdown-menu {
-			z-index: 1;
+			
 		    border-radius: 0px;
 		  	margin: 0;
 		  	width: 300px;
@@ -43,14 +43,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		  	text-overflow: '';
 		}
 		paper-dropdown-menu:hover {
-			animation: hover ease-in 0.1s;
-        	animation-fill-mode: forwards;
+      z-index: 1;
+			
 		}
 
-		@keyframes hover {
-        from  {opacity: 1; }
-        to    {opacity: 0.8; }
-      }
+		
 
     </style>
 	<template>
@@ -60,14 +57,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			data="{{firebaseData}}"> </firebase-collection>
 
 		<div class="custom dropdown" elevation="2">
-		<paper-dropdown-menu label="{{label}}" id="chartSelection" on-iron-select="findSelectedItem">
+
+		<paper-dropdown-menu label="{{label}}" id="chartSelection" on-iron-select="findSelectedItem" on-tap="test">
 		  <paper-menu class="dropdown-content">
-		  	<template is= "dom-repeat" items= "{{firebaseData}}">
-		    	<paper-item id="{{item.value}}">{{item.value}}</paper-item>
+		  	<template is= "dom-repeat" count="[[itemNumber]]" items= "{{feat1}}">
+		    	<paper-item id="{{item.value}}" name="{{item.type}}">{{item.value}}</paper-item>
 			</template>
 		  </paper-menu>
 		</paper-dropdown-menu>
+   
 		</div>
+    <h1>{{selection}}<h1>
+    <div id="log"></div>
 
 	</template>
   <script>
@@ -81,6 +82,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             		value: '',
             		notify: true
       			},
+            feat1: {
+              type:Array,
+              value:[{value: "Please select from one of the lists above"}], // you should never see this since default value is passed in from parent
+              
+            },
 
       			firebaseData: {
             		type: Array,
@@ -88,22 +94,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       			},
 
       			dropSelection: {
-      				type: String,
+      				type: Array,
       				value: '',
       				notify: true
       			},
+            data: {
+              type: Array,
+              value: '',
+              notify: true
+            },
+
+            scrollSelection: {
+              type: Array,
+              value: [{value: "test"}, {value: "test"}, {value: "test"}],
+              notify: true
+            },
 
       			label: {
       				type: String,
       				value: 'Select one of the following',
       				notify: true
-      			}
+      			}, 
+            itemNumber: { 
+              type: Number,
+              value: 0
+            }
       			
         	},
         	findSelectedItem: function() {
-        		var si = this.$.chartSelection.selectedItem.id;
+            //find the number of the selected item, then we can call the feat[number of selected item].type
+        		var si =[]
+            si.push({type: this.$.chartSelection.selectedItem.name, value: this.$.chartSelection.selectedItem.id});
         		this.dropSelection = si;
-        	}
+            console.log("test function results:");
+             console.log(this.dropSelection);
+        	},
+          test: function() {
+            
+            console.log(this.feat1[1]);
+            
+          }
+         
       	});
     })();
 

@@ -10,7 +10,8 @@
     "lavu-grid": "leifoolsen/lavu-grid#~0.0.5",
     "universal-footer": "*",
     "google-chart": "GoogleWebComponents/google-chart#~1.0.3",
-    "firebase-element": "GoogleWebComponents/firebase-element#~1.0.8"
+    "firebase-element": "GoogleWebComponents/firebase-element#~1.0.8",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#~1.1.1"
   },
   "devDependencies": {
     "web-component-tester": "*",

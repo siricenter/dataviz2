@@ -23,42 +23,92 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     		display: flex;
     		justify-content: space-between;
   		}
+  		#dropdown-content {
+    		padding: 30px;
+    		display: flex;
+    		justify-content: space-between;
+    		flex-wrap: wrap;
+  		}
+  		paper-button {
+        background-color: var(--default-primary-color);
+        color: var(--text-primary-color);
+      }
 
     .iron-selected {
       background: #85d3ee;
     }
+
+    #tile {
+    	cursor:pointer;
+    }
+
   
 
     </style>
 	<template>	
 		<div class="wrapper">
-			<scrollable-list  header="first"></scrollable-list>
-			<scrollable-list header="second"></scrollable-list>
-			<scrollable-list header="third"></scrollable-list>
+			<scrollable-list id="exp" 
+				firebase-ref="https://rbdcdataviz.firebaseio.com/ipedsData/expenditures" 
+				firebase-data="{{fbExpData}}"
+				scroll-selection="{{value1}}" 
+				header="Expenditures"
+				chart-type="exp"   
+				on-tap="valueChanged" ></scrollable-list>
+			<scrollable-list id="grad" 
+				firebase-ref="https://rbdcdataviz.firebaseio.com/ipedsData/gradRates" 
+				firebase-data="{{fbGradData}}"
+				scroll-selection="{{value2}}" 
+				header="Grad Rates" 
+				chart-type="grad"    
+				on-tap="valueChanged"></scrollable-list>
+			<scrollable-list id="inst" 
+				firebase-ref="https://rbdcdataviz.firebaseio.com/ipedsData/institutions" 
+				firebase-data="{{fbInstData}}"
+				scroll-selection="{{value3}}" 
+				header="Institutions"
+				chart-type="inst" 
+				on-tap="valueChanged"></scrollable-list>
 		</div>
 		<paper-material id="tile-content" elevation="1">
 			<iron-selector id="content" on-iron-select="selectChartType">
-				<tile-component title="Pie" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
+				<tile-component id="tile" title="Pie" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
 	        	</tile-component>
 
-	        	<tile-component title="Bar" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
+	        	<tile-component id="tile" title="Bar" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
 	        	</tile-component>
 
-	        	<tile-component title="Graph" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
+	        	<tile-component id="tile" title="Geo" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
 	        	</tile-component>
 
-	        	<tile-component title="Area" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
+	        	<tile-component id="tile" title="Area" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
 	        	</tile-component>
 
-	        	<tile-component title="Radar" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
+	        	<tile-component id="tile" title="Radar" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
 	        	</tile-component>
 
-	        	<tile-component title="Bubble" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
+	        	<tile-component id="tile" title="Bubble" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
 	        	</tile-component>
 	        </iron-selector>
       	</paper-material>
-		<custom-dropdown firebase-ref="https://rbdcdataviz.firebaseio.com/chartTypes" drop-selection="{{drop-selection}}"></custom-dropdown>
-		<h1>{{drop-selection}}</h1>
+      	<paper-material id="dropdown-content" elevation="1">
+      	<!-- <div id="dropdown-content"> -->
+			<custom-dropdown id="name" feat1="[[value]]" drop-selection="{{nameSelection}}" label="Name" on-iron-select="aggregate"></custom-dropdown>
+			<custom-dropdown id="xValue" feat1="[[value]]" drop-selection="{{xSelection}}" label="X-Value"  on-iron-select="aggregate"></custom-dropdown>
+			<custom-dropdown id="yValue" feat1="[[value]]" drop-selection="{{ySelection}}" label="Y-Value"  on-iron-select="aggregate"></custom-dropdown>
+			<custom-dropdown id="category" feat1="[[value]]" drop-selection="{{categorySelection}}" label="Category" on-iron-select="aggregate"></custom-dropdown>
+			<custom-dropdown id="size" feat1="[[value]]" label="Size"  drop-selection="{{sizeSelection}}" on-iron-select="aggregate"></custom-dropdown>
+			<paper-button raised on-tap="buildChart">Build Chart <iron-icon icon="arrow-forward"></iron-icon></paper-button>
+
+		<!-- </div> -->
+		</paper-material>
+		<h1>{{scroll-selection}}</h1>
+		<div id="log"></div>
+		<chart-example 
+			chosenvalue="[[chosenValues]]" 
+			base-ref="https://rbdcdataviz.firebaseio.com/ipedsData/"
+			fb-exp-data="{{fbExpData}}"
+			fb-inst-data="{{fbInstData}}"
+			fb-grad-data="{{fbGradData}}"></chart-example>
 	</template>
   	<script>
 	    (function() {
@@ -76,13 +126,124 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       					type: String,
       					value: '',
       					notify: true
-      				}
+      				},
+
+      				value1: {
+			          type: Array
+			        },
+
+			        value2: {
+			          type: Array
+			        },
+
+			        value3: {
+			          type: Array
+			        },
+
+			        value: {
+			          type: Array
+
+			        },
+
+			        xSelection: {
+			          type: Array,
+			          value: [{type: "not selected"}]
+			        },
+
+			        nameSelection: {
+			          type: Array,
+			          value: [{type: "not selected"}]
+			        },
+
+			        ySelection: {
+			          type: Array,
+			          value: [{type: "not selected"}]
+			        },
+
+			        categorySelection: {
+			          type: Array,
+			          value: [{type: "not selected"}]
+			        },
+
+			        sizeSelection: {
+			          type: Array,
+			          value: [{type: "not selected"}]
+			        },
+			        chosenValues:{
+			        	type: Array
+			        }
 	        	},
 
 	        	selectChartType: function() {
 	        	var selected = this.$.content.selectedItem.title;
         		this.chartSelection = selected;
+	        	},
+
+
+	        	valueChanged: function() {
+	        		var expScroll  = this.value1;
+	        		var gradScroll = [];
+	        		var instScroll = [];
+	        		var temp = [];
+
+	        		
+
+	        		expScroll  = this.value1;
+	        		gradScroll = this.value2;
+	        		instScroll = this.value3;
+
+	        		//console.log(gradScroll.length)
+
+	        		//temp.push({type: "exp", value: expScroll});
+	        		 //for each(var item in expScroll) {
+
+	        		 	//this does not need to be seperated into three distinct arrays of objects, instead, run through each scrollable list and 
+	        			//push it into one single array. boom.
+	        		 	for (var i = 0; i < expScroll.length; i++) {
+	        		 	//console.log(expScroll[i].value)
+	        		 	temp.push({type: "exp", value: expScroll[i].value});
+	        		 }
+	        		  for (var i = 0; i < gradScroll.length; i++) {
+	        		 // 	console.log(gradScroll[i].value)
+	        		  	temp.push({type: "grad", value: gradScroll[i].value});
+	        		  }
+	        		 for (var i = 0; i < instScroll.length; i++) {
+	        		//  	console.log(instScroll[i].value)
+	        		  	temp.push({type: "inst", value: instScroll[i].value});
+	        		  }
+	        		
+	        		
+
+	        		this.value = temp;
+	        		//console.log(expScroll.length);
+
+	        	},
+
+	        	aggregate: function() {
+	        		var drop1 = this.nameSelection;
+	        		var drop2 = this.xSelection;
+	        		var drop3 = this.ySelection;
+	        		var drop4 = this.categorySelection;
+	        		var drop5 = this.sizeSelection;
+	        		var aggregated = [];
+
+	        		// //var si = this.$.name.dropSelection;
+	        		 console.log(drop5);
+
+	        		 aggregated.push({type: "chartSelection", value: this.chartSelection})
+	        		 aggregated.push({type: "name", chart: this.nameSelection[0].type, value: this.nameSelection[0].value});
+	        		 aggregated.push({type: "xSelection", chart: this.xSelection[0].type, value: this.xSelection[0].value});
+	        		 aggregated.push({type: "ySelection", chart: this.ySelection[0].type, value: this.ySelection[0].value});
+	        		 aggregated.push({type: "categorySelection", chart: this.categorySelection[0].type, value: this.categorySelection[0].value});
+	        		 aggregated.push({type: "size", chart: this.sizeSelection[0].type, value: this.sizeSelection[0].value});
+
+	        		 this.chosenValues = aggregated;
+
+	        		 console.log("looking at chosen values");
+	        		 console.log(this.chosenValues);
+
 	        	}
+	        	
 	      	});
 	    })();
   </script>

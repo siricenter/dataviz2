@@ -45,33 +45,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: var(--text-primary-color);
       }
     </style>
-    <!-- <firebase-collection id="fbExp"
-      location="{{ref}}"
-      order-by-child="UNITID"
+    <firebase-collection id="fbExp"
+      location="{{expRef}}"
+      order-by-child="{{orderBy}}"
       equal-to="{{equalTo}}"
-      start-at="{{startAt}}"
-      end-at="{{endAt}}"
       data="{{expData}}"
-      on-firebase-value="gradSnap"></firebase-collection> -->
+      on-firebase-value="buildChartData"></firebase-collection>
 
-     <!--  <firebase-collection id="fbGrad"
+     <firebase-collection id="fbGrad"
       location="{{gradRef}}"
-      order-by-child="UNITID"
+      order-by-child="{{orderBy}}"
       equal-to="{{equalTo}}"
       start-at="{{startAt}}"
       end-at="{{endAt}}"
       data="{{gradData}}"
-     on-firebase-value="gradSnap"></firebase-collection> -->
+     on-firebase-value="buildChartData"></firebase-collection>
 
       <firebase-collection id="fbInst"
       location="{{instRef}}"
       order-by-child="{{orderBy}}"
       equal-to="{{equalTo}}"
       data="{{instData}}"
-      on-firebase-value="aggregationBasic"></firebase-collection>
+      on-firebase-value="buildChartData"></firebase-collection>
 
     <paper-material elevation="1">
-      <h2>States</h2>
+      <h2>Data Visualization</h2>
+      <h2>I am here!</h2>
+       <h2>{{chosenvalue}}</h2>
       <google-chart
         type="{{chartType}}"
         id='selection-chart'
@@ -83,7 +83,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div id="inputs">
         <paper-input label="Data Node" value="{{firebaseNode}}"></paper-input>
         <paper-input label="Equal To" value="{{orderBy}}"></paper-input>
-        <paper-button raised on-tap="buildChart">Build Chart <iron-icon icon="arrow-forward"></iron-icon></paper-button>
+        <paper-button raised on-tap="buildChartData">Build Chart <iron-icon icon="arrow-forward"></iron-icon></paper-button>
         <paper-button raised on-tap="makePie">PIE <iron-icon icon="arrow-forward"></iron-icon></paper-button>
         <paper-button raised on-tap="makeBar">BAR <iron-icon icon="arrow-forward"></iron-icon></paper-button>
         <paper-button raised on-tap="makeGeo">GEO <iron-icon icon="arrow-forward"></iron-icon></paper-button>
@@ -98,6 +98,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'chart-example',
 
       properties: {
+        chosenvalue: {
+          type: Array,
+          value: [{value: "Please select from one of the lists above"}]
+          
+        },
         baseRef: {
           type: String,
           value: '',
@@ -133,15 +138,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: '',
           notify: true
         },
-        expData: {
+        fbExpData: {
            type: Object,
+           value:'',
+           notify: true
          },
-        gradData: {
-           type: Object,
+        fbGradData: {
+            type: Object,
+           value:'',
+           notify: true
          },
-        instData: {
-           type: Object,
+        fbInstData: {
+            type: Object,
+           value:'',
+           notify: true
          },
+
         chartType: {
           type: String,
           value: 'pie',
@@ -153,17 +165,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         orderBy: {
           type: String,
-          value: 'STABBR',
+          value: 'UNITID',
           notify: true
         },
         startAt: {
           type: Number,
-          value: '2',
+          value: null,
           notify: true
         },
         endAt: {
           type: Number,
-          value: '3',
+          value: null,
           notify: true
         },
         equalTo: {
@@ -173,7 +185,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         firebaseNode: {
           type: String,
-          value: 'institutions',
+          value: 'expenditures',
           notify: true
         },
         chartOptions: {
@@ -203,15 +215,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
         //array.slice(indexOf(some sub property of where its 3))
-      gradSnap: function() {
+      gradSnap: function(dropDownItem) {
         var category = this.orderBy;
-        var FBR = this.instData;
+        var FBR = this.fbGradData;
         var grad2 = [];
         var grad3 = [];
         var renderedData = [];
         var dividedData = 0;
 
-        console.log("working");
+        console.log(FBR);
       //take the object, add new property gradrate, then push whole object.
       var pos = FBR.map(function(e) { return e.GRTYPE; }).indexOf('3');
       grad2 = FBR.slice(0, pos);
@@ -223,13 +235,82 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         FBR[i].GRADRATE = dividedData;
         //FBR[i].push()
       }
+      
+        renderedData = this.aggregationBasic(FBR)
+    
       console.log(FBR);
+      return renderedData;
       },
 
+      instSnap: function(dropDownItem) {
+        var category = this.orderBy;
+        var FBR = this.fbInstData;
+        var renderedData = [];
+
+        console.log("instSnap being called");
+        //finding all of the data of the given firebase collection, and filling an array based on specific data chosen by the user.
+        //renderedData = this.aggregationBasic(FBR);
+
+
+      },
+
+      expSnap: function(dropDownItem) {
+        console.log("hitting expSnap");
+        var FBR = this.fbExpData;
+        var renderedData = [];
+        console.log("expSnap being called");
+        //renderedData = this.aggregationBasic(FBR);
+        
+
+      },
+
+      //a function needs to be called after all three of these functions are done running, and parse the information into an object that will be given to the google chart element.
       
       buildChartData: function(e) {
+        // Build chart data will be somewhat of a 'main' function for parsing all of the information into a string to be presented to the google chart builder.
+        var finalData = [];
+        var parser = [];
+        var dataPoint = '';
+        var stringifiedData = '';
+        var chosenValue = [];
+        chosenValue = this.chosenValue;
+        var name = this.chosenvalue[1].value;
+        var xData = this.chosenvalue[2].value;
+        var yData = this.chosenvalue[3].value;
+        var color = this.chosenvalue[4].value;
+        finalData.push([]);
+
+        for(var i = 1; i < this.chosenvalue.length; i++) {
+          finalData[0].push(this.chosenvalue[i].value);
+        }
+
+        console.log("here are the expRates");
+        console.log(this.fbExpData);
 
 
+        //loop through each of the dropdowns on the page and find out which 'snap' function to call.
+        //var dataPoint = whatever the dropdown says
+        for(var i = 1; i < this.chosenvalue.length; i++) {
+
+          dataPoint = this.chosenvalue[i].value;
+          
+          if(this.chosenvalue[i].chart === "grad") {
+
+            parser = this.gradSnap(dataPoint);
+            //finalData[i].push(parser);
+
+            }
+          else if(this.chosenvalue[i].chart === "exp") {
+            parser = this.expSnap(dataPoint);
+            //finalData[i].push(parser);
+
+            }
+          else {
+            parser = this.instSnap(dataPoint);
+            //finalData[i].push(parser);
+
+          }
+        }
       },
 
       aggregation: function() {
@@ -240,98 +321,159 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       //THIS IS THE WORKING CODE TO MAKE THE BASIC CHARTS. basic aggregation, one value.
-      aggregationBasic: function(e) {
+      aggregationBasic: function(FBR) {
+
+        console.log("inside the aggregator");
         var category = this.orderBy
-        var FBR = this.instData;
+        var FBR = this.fbGradData;
         var aggResult = [];
         var currentItem = '';
         var aggIndex = 0;
         var parser = [];
 
-        for (var i = 0; i < FBR.length; i++) {
-          if (!currentItem) {
-            aggResult.push({type:FBR[i][category], number:1}); 
-            currentItem = FBR[i][category];
-          }
-          else if (currentItem === FBR[i][category]) {
-            aggResult[aggIndex]["number"]++;
-            currentItem = FBR[i][category];
-          }
-          else {
-            aggResult.push({type:FBR[i][category], number:1});
-            currentItem = FBR[i][category];
-            parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
-            aggIndex++;
-          }
-        }
-        parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
+        // for (var i = 0; i < FBR.length; i++) {
+        //   if (!currentItem) {
+        //     aggResult.push({type:FBR[i][category], number:1}); 
+        //     currentItem = FBR[i][category];
+        //   }
+        //   else if (currentItem === FBR[i][category]) {
+        //     aggResult[aggIndex]["number"]++;
+        //     currentItem = FBR[i][category];
+        //   }
+        //   else {
+        //     aggResult.push({type:FBR[i][category], number:1});
+        //     currentItem = FBR[i][category];
+        //     parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
+        //     aggIndex++;
+        //   }
+        // }
         // console.log(aggResult);
-        //var chartType
+        // parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
+        // // 
+        // //var chartType
        
-        this.chosenOption = this.chartOptions[this.chartType];
+        // this.chosenOption = this.chartOptions[this.chartType];
 
-         console.log(this.chartOptions.pie);
+        // //sortArrOfObjectsByParam(FBR, "STABBR");
+
+
+
+         console.log(FBR);
         // var chart = document.querySelector('#selection-chart');
         // chart.drawChart();
         
         this.parser = parser;
+
+        return parser
       },
+
+      sortArrOfObjectsByParam: function(arrToSort, strObjParamToSortBy , sortAscending) {
+      if(sortAscending == undefined){ sortAscending = true;}  // default to true
+    
+      if(sortAscending) {
+        arrToSort.sort(function (a, b) {
+          return a[strObjParamToSortBy] > b[strObjParamToSortBy];
+        });
+      }
+      else {
+        arrToSort.sort(function (a, b) {
+            return a[strObjParamToSortBy] < b[strObjParamToSortBy];
+        });
+      }
+    },
 
       //Name: institutions=>STABBR, X: expenditures=>total, Y: gradRates=>, Color: institutions=>YEAR, Size: expenditures=>TOTAL  
 
-      aggregationAdvanced: function(e) {
-        var xData = '';
-        var yData = '';
-        var name = '';
-        var FBR = this.dataPoints;
+      aggregationAdvanced: function(FBR) {
+
+        console.log("inside the aggregator");
+        var category = this.orderBy
+        
         var aggResult = [];
         var currentItem = '';
         var aggIndex = 0;
         var parser = [];
 
         for (var i = 0; i < FBR.length; i++) {
-          if (!currentItem) {
-            aggResult.push({title:FBR[i][name], xData:FBR[i][xData], yData:FBR[i][yData], color:color, size:1}); 
-            currentItem = FBR[i][category];
-          }
-          else if (currentItem === FBR[i][category]) {
-            aggResult[aggIndex]["size"]++;
-            currentItem = FBR[i][category];
-          }
-          else {
-            aggResult.push({title:FBR[i][name], xData:FBR[i][xData], yData:FBR[i][yData], color:color, size:1}); 
-            currentItem = FBR[i][category];
-            parser.push([ aggResult[aggIndex]["name"], 
-                          aggResult[aggIndex]["xData"], 
-                          aggResult[aggIndex]["yData"], 
-                          aggResult[aggIndex]["color"],
-                          aggResult[aggIndex]["size"] ])
-            aggIndex++;
-          }
+         
+          
+
         }
-        parser.push([ aggResult[aggIndex]["name"], 
-                      aggResult[aggIndex]["xData"], 
-                      aggResult[aggIndex]["yData"], 
-                      aggResult[aggIndex]["color"],
-                      aggResult[aggIndex]["size"] ])
-        // console.log(aggResult);
+        console.log(aggResult);
+        parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
+        // 
         //var chartType
-
-
        
         this.chosenOption = this.chartOptions[this.chartType];
 
-         console.log(this.chartOptions.pie);
+        //sortArrOfObjectsByParam(FBR, "STABBR");
+
+
+
+         console.log(FBR);
         // var chart = document.querySelector('#selection-chart');
         // chart.drawChart();
         
         this.parser = parser;
+
+        return parser;
+
+
+
+        // var chosenValue = [];
+        // chosenValue = this.chosenValue;
+        // var name = this.chosenvalue[1].value;
+        // var xData = this.chosenvalue[2].value;
+        // var yData = this.chosenvalue[3].value;
+        // var color = this.chosenvalue[4].value;
+        // var FBR = this.dataPoints;
+        // var aggResult = [];
+        // var currentItem = '';
+        // var aggIndex = 0;
+        // var parser = [];
+
+        // console.log(this.chosenvalue[1].type + " " + this.chosenvalue[1].value);
+        // console.log("X " + this.chosenvalue[2].value);
+        // console.log("Y " + this.chosenvalue[3].value);
+        // console.log("category " + this.chosenvalue[4].value);
+        
+
+        // for (var i = 0; i < FBR.length; i++) {
+        //   if (!currentItem) {
+        //     aggResult.push({title:FBR[i][name], xData:FBR[i][xData], yData:FBR[i][yData], color:color, size:1}); 
+        //     currentItem = FBR[i][category];
+        //   }
+        //   else if (currentItem === FBR[i][category]) {
+        //     aggResult[aggIndex]["size"]++;
+        //     currentItem = FBR[i][category];
+        //   }
+        //   else {
+        //     aggResult.push({title:FBR[i][name], xData:FBR[i][xData], yData:FBR[i][yData], color:color, size:1}); 
+        //     currentItem = FBR[i][category];
+        //     parser.push([ aggResult[aggIndex]["name"], 
+        //                   aggResult[aggIndex]["xData"], 
+        //                   aggResult[aggIndex]["yData"], 
+        //                   aggResult[aggIndex]["color"],
+        //                   aggResult[aggIndex]["size"] ])
+        //     aggIndex++;
+        //   }
+        // }
+        // parser.push([ aggResult[aggIndex]["name"], 
+        //               aggResult[aggIndex]["xData"], 
+        //               aggResult[aggIndex]["yData"], 
+        //               aggResult[aggIndex]["color"],
+        //               aggResult[aggIndex]["size"] ])
+
+        // this.chosenOption = this.chartOptions[this.chartType];
+        // console.log(this.chartOptions.pie);
+        // this.parser = parser;
+
       },
 
 
       // could be more efficient
       makePie: function() {
-        this.chartType = "pie";
+        this.chartType = "bubble";
         this.chosenOption = this.chartOptions[this.chartType];
         var chart = document.querySelector('#selection-chart');
         chart.drawChart();
@@ -357,10 +499,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       buildChart: function() {  //Some Hardcoded information, need to change as soon as possible
         this.instRef = this.buildRef(this.baseRef);
-        // this.firebaseNode = 'institutions'
-        // this.instRef = this.buildRef(this.baseRef);
-        // this.firebaseNode = 'expenditures'
-        // this.expRef = this.buildRef(this.baseRef);
+         this.firebaseNode = 'expenditures'
+       this.expRef = this.buildRef(this.baseRef);
+         this.firebaseNode = 'gradRates'
+         this.gradRef = this.buildRef(this.baseRef);
         this.chartData = this.data;
       }
     });
