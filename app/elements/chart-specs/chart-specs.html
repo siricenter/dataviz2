@@ -33,6 +33,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: var(--default-primary-color);
         color: var(--text-primary-color);
       }
+      paper-slider {
+      	color: var(--text-primary-color);
+      	width: 500px;
+      }
 
     .iron-selected {
       background: #85d3ee;
@@ -46,29 +50,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 	<template>	
+	<paper-material elevation="1">
 		<div class="wrapper">
+			<div> <h1>Year Start</h1>
+				<paper-slider id="yearStart" min="2002" max="{{maximumYear}}" value="2002" pin="true" snaps="true" on-change="setYears"></paper-slider>
+			</div>
+			<div> <h1>Year End</h1>
+				<paper-slider id="yearEnd" min="{{minimalYear}}" max="2013" value="2013" pin="true" snaps="true" on-change="setYears"></paper-slider>
+			</div>
+		</div>
+	</paper-material>
+		 <div class="wrapper">
 			<scrollable-list id="exp" 
-				firebase-ref="https://rbdcdataviz.firebaseio.com/ipedsData/expenditures" 
+				firebase-ref="https://rbdcdataviz.firebaseio.com/chartTypes/categories/expenditures" 
 				firebase-data="{{fbExpData}}"
 				scroll-selection="{{value1}}" 
 				header="Expenditures"
 				chart-type="exp"   
 				on-tap="valueChanged" ></scrollable-list>
 			<scrollable-list id="grad" 
-				firebase-ref="https://rbdcdataviz.firebaseio.com/ipedsData/gradRates" 
+				firebase-ref="https://rbdcdataviz.firebaseio.com/chartTypes/categories/gradRates" 
 				firebase-data="{{fbGradData}}"
 				scroll-selection="{{value2}}" 
 				header="Grad Rates" 
 				chart-type="grad"    
 				on-tap="valueChanged"></scrollable-list>
 			<scrollable-list id="inst" 
-				firebase-ref="https://rbdcdataviz.firebaseio.com/ipedsData/institutions" 
+				firebase-ref="https://rbdcdataviz.firebaseio.com/chartTypes/categories/institutions" 
 				firebase-data="{{fbInstData}}"
 				scroll-selection="{{value3}}" 
 				header="Institutions"
 				chart-type="inst" 
 				on-tap="valueChanged"></scrollable-list>
+			<scrollable-list id="eifa" 
+				firebase-ref="https://rbdcdataviz.firebaseio.com/chartTypes/categories/EIFA" 
+				firebase-data="{{fbEifaData}}"
+				scroll-selection="{{value4}}" 
+				header="EIFA"
+				chart-type="eifa" 
+				on-tap="valueChanged"></scrollable-list>
 		</div>
+
+
 		<paper-material id="tile-content" elevation="1">
 			<iron-selector id="content" on-iron-select="selectChartType">
 				<tile-component id="tile" title="Pie" card-elevation="0" img-position="top" img-path="http://lorempixel.com/50/50" >
@@ -108,7 +131,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			base-ref="https://rbdcdataviz.firebaseio.com/ipedsData/"
 			fb-exp-data="{{fbExpData}}"
 			fb-inst-data="{{fbInstData}}"
-			fb-grad-data="{{fbGradData}}"></chart-example>
+			fb-grad-data="{{fbGradData}}"
+			fb-eifa-data="{{fbEifaData}}"></chart-example>
 	</template>
   	<script>
 	    (function() {
@@ -137,6 +161,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			        },
 
 			        value3: {
+			          type: Array
+			        },
+
+			         value4: {
 			          type: Array
 			        },
 
@@ -169,10 +197,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			          type: Array,
 			          value: [{type: "not selected"}]
 			        },
+			        minimalYear: {
+			        	type: Number,
+			        	value: 2002
+			        },
+			        maximumYear: {
+			        	type: Number,
+			        	value: 2013
+			        },
 			        chosenValues:{
 			        	type: Array
 			        }
 	        	},
+	        	ready: function() { 
+            // Firebase.enableLogging(true);
+          },
+
+          setYears: function() { 
+          	var min = 2002;
+          	var max = 2013;
+          	var years = 0;
+
+          	this.minimalYear = this.$.yearStart.value;
+          	min = this.$.yearStart.value;
+          	this.maximumYear = this.$.yearEnd.value;
+          	max = this.$.yearEnd.value;
+
+          	years = max - min;
+
+          	console.log(years);
+
+          },
 
 	        	selectChartType: function() {
 	        	var selected = this.$.content.selectedItem.title;
@@ -184,6 +239,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	        		var expScroll  = this.value1;
 	        		var gradScroll = [];
 	        		var instScroll = [];
+	        		var eifaScroll = [];
 	        		var temp = [];
 
 	        		
@@ -191,6 +247,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	        		expScroll  = this.value1;
 	        		gradScroll = this.value2;
 	        		instScroll = this.value3;
+	        		eifaScroll = this.value4;
 
 	        		//console.log(gradScroll.length)
 
@@ -201,15 +258,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	        			//push it into one single array. boom.
 	        		 	for (var i = 0; i < expScroll.length; i++) {
 	        		 	//console.log(expScroll[i].value)
-	        		 	temp.push({type: "exp", value: expScroll[i].value});
+	        		 	console.log(expScroll[0])
+	        		 	if (expScroll[0])
+	        		 		temp.push({type: "exp", value: expScroll[i].value});
 	        		 }
-	        		  for (var i = 0; i < gradScroll.length; i++) {
+	        		  for (i = 0; i < gradScroll.length; i++) {
 	        		 // 	console.log(gradScroll[i].value)
 	        		  	temp.push({type: "grad", value: gradScroll[i].value});
 	        		  }
-	        		 for (var i = 0; i < instScroll.length; i++) {
+	        		 for (i = 0; i < instScroll.length; i++) {
 	        		//  	console.log(instScroll[i].value)
 	        		  	temp.push({type: "inst", value: instScroll[i].value});
+	        		  }
+	        		  for (i = 0; i < eifaScroll.length; i++) {
+	        		//  	console.log(instScroll[i].value)
+	        		  	temp.push({type: "eifa", value: eifaScroll[i].value});
 	        		  }
 	        		
 	        		
@@ -220,15 +283,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	        	},
 
 	        	aggregate: function() {
-	        		var drop1 = this.nameSelection;
-	        		var drop2 = this.xSelection;
-	        		var drop3 = this.ySelection;
-	        		var drop4 = this.categorySelection;
-	        		var drop5 = this.sizeSelection;
+	        		//var drop1 = this.nameSelection;
+	        		//var drop2 = this.xSelection;
+	        		//var drop3 = this.ySelection;
+	        		//var drop4 = this.categorySelection;
+	        		//var drop5 = this.sizeSelection;
 	        		var aggregated = [];
 
 	        		// //var si = this.$.name.dropSelection;
-	        		 console.log(drop5);
+	        		 //console.log(drop5);
 
 	        		 aggregated.push({type: "chartSelection", value: this.chartSelection})
 	        		 aggregated.push({type: "name", chart: this.nameSelection[0].type, value: this.nameSelection[0].value});

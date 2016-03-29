@@ -47,7 +47,7 @@ ul {
 
 
 
-  <div class="test"> <h1>{{header}}</h1>
+  <div class="test" onclick=""> <h1>{{header}}</h1>
     <div id="wrapper">
        
         <ul>
@@ -109,7 +109,7 @@ ul {
             },
             scrollSelection: {
               type: Object,
-              value: [{test: ""}],
+              value: '',
               notify: true
             },
             test: {
@@ -126,23 +126,32 @@ ul {
           ready: function() { 
             
           },
+
+
           populate: function() {
             
             var FBR = this.firebaseData;
             var list = [];
             var temp = [];
-            
-            list.push(Object.keys(FBR[1]));
 
-            for(var i = 0; i < list[0].length; i++){
-              temp.push({data: list[0][i]});
-
+            for(var i = 0; i < FBR.length; i++) {
+              temp.push({data: FBR[i]["__firebaseKey__"]});
             }
-            this.datas = temp;
+            
+            //console.log(FBR[1]["__firebaseKey__"]);
+
+            // list.push(Object.keys(FBR[1]));
+            // console.log(list);
+
+            // for(var i = 0; i < list[0].length; i++){
+            //   temp.push({data: list[0][i]});
+
+            // }
+             this.datas = temp;
             //console.log(list);
           },
 
-          updateForm: function(divObj) {
+          updateForm: function() {
             var rawSelected = [];
             var selected = []
 

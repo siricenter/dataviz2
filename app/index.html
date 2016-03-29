@@ -53,8 +53,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- will be replaced with elements/elements.vulcanized.html -->
   <link rel="import" href="elements/elements.html">
   <!-- endreplace-->
-  <script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script> <!--
-  <script type="text/javascript" src="scripts/database_seeds/dummy_seed.json"></script>
+  <script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script> 
+  <!-- <script type="text/javascript" src="scripts/database_seeds/dummy_seed.json"></script>
   <script type="text/javascript" src="scripts/database_seeds/institutions_seed.json"></script>
   <script type="text/javascript" src="scripts/database_seeds/expenditures_seed.json"></script>
   <script type="text/javascript" src="scripts/database_seeds/GR2002_seed.json"></script>
@@ -68,7 +68,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script type="text/javascript" src="scripts/database_seeds/GR2010_seed.json"></script>
   <script type="text/javascript" src="scripts/database_seeds/GR2011_seed.json"></script>
   <script type="text/javascript" src="scripts/database_seeds/GR2012_seed.json"></script>
-  <script type="text/javascript" src="scripts/database_seeds/GR2013_seed.json"></script> -->
+  <script type="text/javascript" src="scripts/database_seeds/GR2013_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/EIFA_seed.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/dummy_grad.json"></script>
+
+  <script type="text/javascript" src="scripts/database_seeds/EIFA_categories.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/gradRate_categories.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/institution_categories.json"></script>
+  <script type="text/javascript" src="scripts/database_seeds/expenditure_categories.json"></script> -->
 
 
 </head>
@@ -113,7 +120,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
             <section data-route="home" class="flex">
-              <firebase-data-importer base-ref="https://rbdcdataviz.firebaseio.com/ipedsData/"></firebase-data-importer>
+              <firebase-data-importer base-ref="https://smidttesting.firebaseio.com"></firebase-data-importer>
+              <!-- <download-tester></download-tester> -->
               <chart-specs chart-selection="{{chart-selection}}"></chart-specs>
               
               
@@ -134,7 +142,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                    ["ISR", 81.55, 2.96, "Middle East",   7485600],
                                                    ["RUS", 68.6,  1.54, "Europe",        141850000],
                                                    ["USA", 78.09, 2.05, "North America", 307007000],
-                                                   ["TEST", 80.09, 4.5, "United Alien Confederacy", 307007000] ]'>
+                                                   ["TEST", 80.09, 4.5, "United Alien Confederacy", 307007000],
+                                                   ["TEST2", 30.09, 2.5, "BYUI", 0] ]'>
                 </google-chart>
               </paper-material>
 

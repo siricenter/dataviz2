@@ -34,10 +34,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       location="{{ref}}"
       data="{{items}}"></firebase-collection>
 
+    <firebase-document id="setTester"
+                        location="https://rbdcdataviz.firebaseio.com/categories/EIFA" 
+                        data="{{setTestItems}}"></firebase-document>
+
     <paper-material elevation="1">
       <paper-input id="dataNode" label="Firebase Node"></paper-input>
       <paper-input id="dataFile" label="Data Location"></paper-input>
-      <paper-button raised on-tap="importData">import file<iron-icon icon="file-upload"></iron-icon></paper-button>
+      <paper-button raised on-tap="importCategories">import file<iron-icon icon="file-upload"></iron-icon></paper-button>
     </paper-material>
   </template>
   <script>
@@ -62,15 +66,117 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       buildRef: function(baseRef) {
         return baseRef + this.$.dataNode.value //TODO: account for people not putting trailing or beginning slashes. Also, account for data coming from REST/API calls
+      }, 
+
+      importCategories: function() {
+
+        var fredRef2 = new Firebase('https://rbdcdataviz.firebaseio.com/chartTypes/EIFA');
+
+        var unitObject = {};
+
+        var category = window[this.$.dataFile.value];
+
+        this.ref = this.buildRef(this.baseRef);
+
+        var data = [];
+
+          data = category[0];
+
+          unitObject[category[0]] = data;
+
+          console.log(data);
+
+
+        this.setTestItems = data;
+
       },
 
       importData: function() {
-        var fbColl = this.$.fbColl
-        var data = window[this.$.dataFile.value]
-        this.ref = this.buildRef(this.baseRef)
+        //var year = {};
+        //var temp = [];
+       // var k = 0;
+        var unitObject = {};
+        //var file = '';
+        var grad = [];
+        var inst = [];
+        var exp = [];
+        var eifa = [];
+        //var fredRef2 = new Firebase('https://rbdcdataviz.firebaseio.com/ipedsData/2006');
+        //var fredRef2 = new Firebase('https://smidttesting.firebaseio.com');
+        //fredRef = fredRef.child("2003");
+        //fredRef2.remove();
+        var fbColl = this.$.fbColl;
+        var data = window[this.$.dataFile.value];
+        var instData = window["institutions_seed"];
+        var expData = window["expenditures_seed"];
+        var eifaData = window["EIFA_seed"];
+        //console.log(eifaData);
+        this.ref = this.buildRef(this.baseRef);
+        // for (var year = 2002; year <= 2013; year++) {
+        //   file = "GR" + year +"_seed";
+        //   var data = window[file];
+        //   console.log(file);
+        //   fredRef = new Firebase('https://rbdcdataviz.firebaseio.com/setTest/');
+        //   fredRef = fredRef.child(year);
+        //   //var path = fredFirstNameRef.toString();
+
         for (var i = 0; i < data.length; i++) {
-          fbColl.add(data[i])
+          grad = data[i];
+          for(var j = 0; j < instData.length; j++) {
+            if(data[i]["UNITID"] === instData[j]["UNITID"]) {
+              
+                
+                inst = instData[j];
+
+                //console.log(grad);
+              
+              
+              
+            
+              //console.log("FOUND A MATCH");
+              //console.log(data[i]["unitid"] + " and " + instData[j]["UNITID"]);
+            }
+            //console.log(data.length);
+          
+          //year.push(data[i]);
+          //console.log(data[i]);
+          //console.log((instData[i]["UNITID"]));
+          //console.log(data["unitid"]);
+          }
+          
+          for(var k = 0; k < expData.length; k++) {
+            if(data[i]["UNITID"] === expData[k]["UNITID"] && data[i]["YEAR"] === expData[k]["Year"]) {
+              //console.log("FOUND AN EXP MATCH");
+              //console.log(data[i]["year"] + " and " + expData[k]["Year"]);
+              //console.log(expData[k]);
+              exp = expData[k];
+            }
+          }
+          for(var l = 0; l < eifaData.length; l++) {
+            if(data[i]["UNITID"] == eifaData[l]["UNITID"] && data[i]["YEAR"] == eifaData[l]["Year"]) {
+              eifa = eifaData[l];
+              //console.log("FOUND AN EXP MATCH");
+            }
+          }
+          for (var attrname in inst) { grad[attrname] = inst[attrname]; }
+          for (var attrname in exp) { grad[attrname] = exp[attrname]; }
+          for (var attrname in eifa) { grad[attrname] = eifa[attrname]; }
+          //for (var attrname in grad) { unitObject[attrname] = grad[attrname]; }
+          //console.log(grad);
+          //fbColl.add(grad);
+          //var unit = {[data[i]["unitid"]] : grad};
+          unitObject[data[i]["UNITID"]] = grad;
+          
+
+          
+          //{'someUnitID':{'is':'good', 'may':'work'}}
+          //fbColl.add(data[i])
+          //temp = [];
         }
+        
+          this.setTestItems = unitObject;
+console.log(unitObject);
+        //}
       }
     });
   })();

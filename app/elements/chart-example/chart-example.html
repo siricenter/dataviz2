@@ -14,10 +14,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <!-- *****************************************************************************
 *
-*                                   EXCUSE MY MESS!!
-*                     I am currently working on another aspect of this
-*           element. There will be A LOT of crazy monster code that does nothing.
-*                        apologies in advance for the following...
+*                                   CHART EXAMPLE         
+*          Should probably be renamed, but this element parses and aggregates
+*           the datapoints from each of the databases to make an array used for
+*                        google charts. It then makes a google chart.
 *
 ********************************************************************************-->
 
@@ -45,48 +45,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: var(--text-primary-color);
       }
     </style>
-    <firebase-collection id="fbExp"
+
+    <!-- These three firebase collections call and retrieve information from firebase, one for each database used-->
+
+    <!--Expenditures-->  <!-- TODO: Change these firebases to parse through years, not categories -->
+    <firebase-collection id="mainDataBase"
       location="{{expRef}}"
       order-by-child="{{orderBy}}"
+      start-at="{{startAt}}"
       equal-to="{{equalTo}}"
       data="{{expData}}"
       on-firebase-value="buildChartData"></firebase-collection>
 
-     <firebase-collection id="fbGrad"
+     <!--  <firebase-collection id="fbExp"
+      location="{{expRef}}"
+      order-by-child="{{orderBy}}"
+      equal-to="{{equalTo}}"
+      data="{{expData}}"
+      on-firebase-value="buildChartData"></firebase-collection> -->
+
+    <!--Graduations-->
+    <!-- <firebase-collection id="fbGrad"
       location="{{gradRef}}"
       order-by-child="{{orderBy}}"
       equal-to="{{equalTo}}"
       start-at="{{startAt}}"
       end-at="{{endAt}}"
       data="{{gradData}}"
-     on-firebase-value="buildChartData"></firebase-collection>
+      on-firebase-value="buildChartData"></firebase-collection> -->
 
-      <firebase-collection id="fbInst"
+      <!--Institutions-->
+    <!-- <firebase-collection id="fbInst"
       location="{{instRef}}"
       order-by-child="{{orderBy}}"
       equal-to="{{equalTo}}"
       data="{{instData}}"
-      on-firebase-value="buildChartData"></firebase-collection>
+      on-firebase-value="buildChartData"></firebase-collection> -->
 
     <paper-material elevation="1">
       <h2>Data Visualization</h2>
-      <h2>I am here!</h2>
-       <h2>{{chosenvalue}}</h2>
+
+      <!-- Here is the Google chart. The 'Data' portion is the parsed array with all of the information needed to make the chart-->
       <google-chart
         type="{{chartType}}"
         id='selection-chart'
-        cols='[{"label":"Type", "type":"string"}, {"label":"Number", "type":"number"}]'
-        rows="{{parser}}"
+       data="{{finalChartData}}"
         options="{{chosenOption}}">
       </google-chart>
-<!-- <h1>{{parser}}</h1> -->
+
       <div id="inputs">
-        <paper-input label="Data Node" value="{{firebaseNode}}"></paper-input>
-        <paper-input label="Equal To" value="{{orderBy}}"></paper-input>
         <paper-button raised on-tap="buildChartData">Build Chart <iron-icon icon="arrow-forward"></iron-icon></paper-button>
-        <paper-button raised on-tap="makePie">PIE <iron-icon icon="arrow-forward"></iron-icon></paper-button>
-        <paper-button raised on-tap="makeBar">BAR <iron-icon icon="arrow-forward"></iron-icon></paper-button>
-        <paper-button raised on-tap="makeGeo">GEO <iron-icon icon="arrow-forward"></iron-icon></paper-button>
       </div>
     </paper-material>
   </template>
@@ -101,7 +109,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         chosenvalue: {
           type: Array,
           value: [{value: "Please select from one of the lists above"}]
-          
         },
         baseRef: {
           type: String,
@@ -139,24 +146,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           notify: true
         },
         fbExpData: {
-           type: Object,
-           value:'',
-           notify: true
+          type: Object,
+          value:'',
+          notify: true
          },
         fbGradData: {
-            type: Object,
-           value:'',
-           notify: true
+          type: Object,
+          value:'',
+          notify: true
          },
         fbInstData: {
-            type: Object,
-           value:'',
-           notify: true
+          type: Object,
+          value:'',
+          notify: true
          },
-
+        fbEifaData: {
+          type: Object,
+          value:'',
+          notify: true
+         },
+        expParsed:{
+          type: Array,
+          value: '',
+          notify: true
+        },
+        gradParsed:{
+          type: Array,
+          value: '',
+          notify: true
+        },
+        instParsed:{
+          type: Array,
+          value: '',
+          notify: true
+        },
         chartType: {
           type: String,
-          value: 'pie',
+          value: 'bubble',
           notify: true
         },
         chartData: {
@@ -165,7 +191,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         orderBy: {
           type: String,
-          value: 'UNITID',
+          value: 'UNITID', 
           notify: true
         },
         startAt: {
@@ -188,6 +214,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: 'expenditures',
           notify: true
         },
+        finalChartData:{
+          type: Array,
+          value:[ ["ID", "Life Expectancy", "Fertility Rate", "Region", "Population"],
+                  ["CAN", 80.66, 1.67, "North America", 33739900],
+                  ["DEU", 79.84, 1.36, "Europe",        81902307],
+                  ["DNK", 78.6,  1.84, "Europe",        5523095],
+                  ["EGY", 72.73, 2.78, "Middle East",   79716203],
+                  ["GBR", 80.05, 2,    "Europe",        61801570],
+                  ["IRN", 72.49, 1.7,  "Middle East",   73137148],
+                  ["IRQ", 68.09, 4.77, "Middle East",   31090763],
+                  ["ISR", 81.55, 2.96, "Middle East",   7485600],
+                  ["RUS", 68.6,  1.54, "Europe",        141850000],
+                  ["USA", 78.09, 2.05, "North America", 307007000],
+                  ["TEST", 80.09, 4.5, "United Alien Confederacy", 307007000] ],
+          notify: true
+        },
+
+        // These are the options for styling a specific chart.
         chartOptions: {
           type: Object,
           value: {
@@ -198,11 +242,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
             'bar': {
               "backgroundColor": "none"
-              // bar options
             },
             'column': {
               "backgroundColor": "none"
-              // bar options
             },
             'geo': {
               "region": "US", "resolution": "provinces", "colorAxis": {"colors": ["grey", "#f90", "#f00"]},
@@ -214,161 +256,210 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           notify: true
         }
       },
-        //array.slice(indexOf(some sub property of where its 3))
+      // Grabs all of the information from the Graduation database, and pushes it into an array. Also does some calculations for a
+      // specific data column, and updates that data column.
       gradSnap: function(dropDownItem) {
-        var category = this.orderBy;
+        //var category = this.orderBy;
         var FBR = this.fbGradData;
         var grad2 = [];
         var grad3 = [];
         var renderedData = [];
         var dividedData = 0;
+        var parser = [];
+        var dropDown = dropDownItem.substr(0, dropDownItem.length-1);
+        console.log(dropDownItem);
 
-        console.log(FBR);
-      //take the object, add new property gradrate, then push whole object.
+      // Take the object, add new property gradrate, then push whole object.
+      // Mapping the entire column to allow slicing to occur acurately
       var pos = FBR.map(function(e) { return e.GRTYPE; }).indexOf('3');
       grad2 = FBR.slice(0, pos);
       grad3 = FBR.slice(pos);
+
+      // Going through each row, grabbing the items, dividing, setting precision, casting, and updating the information.
       for (var i = 0; i < grad3.length; i++) {
         dividedData = grad3[i]["GRTOTLT"] / grad2[i]["GRTOTLT"];
         dividedData = dividedData.toFixed(4);
         dividedData = dividedData * 1;
         FBR[i].GRADRATE = dividedData;
-        //FBR[i].push()
       }
       
-        renderedData = this.aggregationBasic(FBR)
-    
+
+      // grabing the information from the database
+      for (i = 0; i < FBR.length; i++) {
+         parser.push(FBR[i][dropDown]);
+      }
+      
+      //sending it back to buildChartData()
+      renderedData = this.aggregationBasic(FBR)
+
       console.log(FBR);
       return renderedData;
       },
 
+      // Grabs all of the information from the Institution database.
       instSnap: function(dropDownItem) {
-        var category = this.orderBy;
+        //var category = this.orderBy;
+        var dropDown = dropDownItem.substr(0, dropDownItem.length - 1);
         var FBR = this.fbInstData;
-        var renderedData = [];
+        //var renderedData = [];
+        var parser = [];
 
-        console.log("instSnap being called");
         //finding all of the data of the given firebase collection, and filling an array based on specific data chosen by the user.
-        //renderedData = this.aggregationBasic(FBR);
+        for (var i = 0; i < FBR.length; i++) {
+          parser.push(FBR[i][dropDown]);
+        }
 
-
+      return parser;
       },
 
+      // Grabs all of the information from the Expenditures database.
       expSnap: function(dropDownItem) {
-        console.log("hitting expSnap");
         var FBR = this.fbExpData;
-        var renderedData = [];
-        console.log("expSnap being called");
-        //renderedData = this.aggregationBasic(FBR);
-        
+        //var renderedData = [];
+        var dropDown = dropDownItem.substr(0, dropDownItem.length - 1);
+        var parser = [];
 
+        for (var i = 0; i < FBR.length; i++) {
+          parser.push(FBR[i][dropDown]);
+        }
+
+      return parser;
       },
 
-      //a function needs to be called after all three of these functions are done running, and parse the information into an object that will be given to the google chart element.
-      
-      buildChartData: function(e) {
-        // Build chart data will be somewhat of a 'main' function for parsing all of the information into a string to be presented to the google chart builder.
+      // Grabs all of the information from the Expenditures database.
+      eifaSnap: function(dropDownItem) {
+        var FBR = this.fbEifaData;
+        //var renderedData = [];
+        var dropDown = dropDownItem.substr(0, dropDownItem.length - 1);
+        var parser = [];
+
+        for (var i = 0; i < FBR.length; i++) {
+          parser.push(FBR[i][dropDown]);
+        }
+
+      return parser;
+      },
+
+      // Build chart data will be somewhat of a 'main' function for parsing all of the information into a string to be presented to the google chart builder.
+      buildChartData: function() {
         var finalData = [];
         var parser = [];
         var dataPoint = '';
-        var stringifiedData = '';
-        var chosenValue = [];
-        chosenValue = this.chosenValue;
-        var name = this.chosenvalue[1].value;
-        var xData = this.chosenvalue[2].value;
-        var yData = this.chosenvalue[3].value;
-        var color = this.chosenvalue[4].value;
+        //var stringifiedData = '';
+        var name = [];
+        var xData = [];
+        var yData = [];
+        var color = [];
+        var size = [];
+        var tempX;
+        var tempY;
+        var tempSize;
         finalData.push([]);
 
         for(var i = 1; i < this.chosenvalue.length; i++) {
           finalData[0].push(this.chosenvalue[i].value);
         }
 
-        console.log("here are the expRates");
-        console.log(this.fbExpData);
 
 
-        //loop through each of the dropdowns on the page and find out which 'snap' function to call.
-        //var dataPoint = whatever the dropdown says
-        for(var i = 1; i < this.chosenvalue.length; i++) {
-
+        // Loop through each of the dropdowns on the page and find out which 'snap' function to call.
+        for(i = 1; i < this.chosenvalue.length; i++) {
           dataPoint = this.chosenvalue[i].value;
-          
           if(this.chosenvalue[i].chart === "grad") {
-
             parser = this.gradSnap(dataPoint);
-            //finalData[i].push(parser);
-
-            }
+          }
           else if(this.chosenvalue[i].chart === "exp") {
             parser = this.expSnap(dataPoint);
-            //finalData[i].push(parser);
-
-            }
-          else {
-            parser = this.instSnap(dataPoint);
-            //finalData[i].push(parser);
-
           }
+          else if (this.chosenvalue[i].chart === "inst") {
+            parser = this.instSnap(dataPoint);
+          }
+          else { 
+            parser = this.eifaSnap(dataPoint);
+          }
+          console.log(parser);
+          // After the information is retrieved, it needs to be placed in a category before final aggregation is performed.
+          switch(i) {
+            case 1:
+              name = parser;
+              break;
+            case 2:
+              xData = parser;
+              break;
+            case 3:
+              yData = parser;
+              break;
+            case 4:
+              color = parser;
+              break;
+            case 5:
+              size = parser;
+              break;
+            default:
+              console.log("Should not be getting this far");
+          } 
+
         }
+
+        // Now organizing all of the information to one single array. This will be the array that is given to the Google charts element.
+        for (i = 0; i < name.length; i++){
+          tempX =  Number(xData[i]);
+          tempY = Number(yData[i]);
+          tempSize = Number(size[i]);
+          var tmpArr = [name[i], tempX, tempY, color[i], tempSize];
+          finalData.push(tmpArr);
+        }
+
+        // Here it is, the final product
+        this.finalChartData = finalData;
       },
 
       aggregation: function() {
 
+        // May still be needed for this project, but for right now this function does nothing.
         console.log("WORKING");
         //this fuction will figure out how many values need to be aggregated, and calls the appropriate function
 
       },
 
-      //THIS IS THE WORKING CODE TO MAKE THE BASIC CHARTS. basic aggregation, one value.
+      // THIS IS THE WORKING CODE TO MAKE THE BASIC CHARTS. basic aggregation, one value.
+      // Not used by advanced charts like 'Bubble'.
       aggregationBasic: function(FBR) {
 
         console.log("inside the aggregator");
         var category = this.orderBy
-        var FBR = this.fbGradData;
+        FBR = this.fbGradData;
         var aggResult = [];
         var currentItem = '';
         var aggIndex = 0;
         var parser = [];
 
-        // for (var i = 0; i < FBR.length; i++) {
-        //   if (!currentItem) {
-        //     aggResult.push({type:FBR[i][category], number:1}); 
-        //     currentItem = FBR[i][category];
-        //   }
-        //   else if (currentItem === FBR[i][category]) {
-        //     aggResult[aggIndex]["number"]++;
-        //     currentItem = FBR[i][category];
-        //   }
-        //   else {
-        //     aggResult.push({type:FBR[i][category], number:1});
-        //     currentItem = FBR[i][category];
-        //     parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
-        //     aggIndex++;
-        //   }
-        // }
-        // console.log(aggResult);
-        // parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
-        // // 
-        // //var chartType
-       
-        // this.chosenOption = this.chartOptions[this.chartType];
+        for (var i = 0; i < FBR.length; i++) {
+          if (!currentItem) {
+            aggResult.push({type:FBR[i][category], number:1}); 
+            currentItem = FBR[i][category];
+          }
+          else if (currentItem === FBR[i][category]) {
+            aggResult[aggIndex]["number"]++;
+            currentItem = FBR[i][category];
+          }
+          else {
+            aggResult.push({type:FBR[i][category], number:1});
+            currentItem = FBR[i][category];
+            parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
+            aggIndex++;
+          }
+        }
+        parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
+        this.chosenOption = this.chartOptions[this.chartType];
 
-        // //sortArrOfObjectsByParam(FBR, "STABBR");
-
-
-
-         console.log(FBR);
-        // var chart = document.querySelector('#selection-chart');
-        // chart.drawChart();
-        
         this.parser = parser;
 
         return parser
       },
 
       sortArrOfObjectsByParam: function(arrToSort, strObjParamToSortBy , sortAscending) {
-      if(sortAscending == undefined){ sortAscending = true;}  // default to true
+      if(sortAscending === undefined){ sortAscending = true;}  // default to true
     
       if(sortAscending) {
         arrToSort.sort(function (a, b) {
@@ -382,105 +473,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     },
 
-      //Name: institutions=>STABBR, X: expenditures=>total, Y: gradRates=>, Color: institutions=>YEAR, Size: expenditures=>TOTAL  
-
+      // I dont think that this needs to be used, will check soon to get rid of this.
       aggregationAdvanced: function(FBR) {
 
         console.log("inside the aggregator");
-        var category = this.orderBy
+        //var category = this.orderBy
         
         var aggResult = [];
-        var currentItem = '';
+        //var currentItem = '';
         var aggIndex = 0;
         var parser = [];
 
         for (var i = 0; i < FBR.length; i++) {
-         
-          
 
         }
         console.log(aggResult);
-        parser.push([aggResult[aggIndex]["type"], aggResult[aggIndex]["number"]]);
-        // 
-        //var chartType
+        parser.push([aggResult[aggIndex]["type"]]);
        
         this.chosenOption = this.chartOptions[this.chartType];
 
-        //sortArrOfObjectsByParam(FBR, "STABBR");
-
-
-
-         console.log(FBR);
-        // var chart = document.querySelector('#selection-chart');
-        // chart.drawChart();
-        
         this.parser = parser;
-
         return parser;
-
-
-
-        // var chosenValue = [];
-        // chosenValue = this.chosenValue;
-        // var name = this.chosenvalue[1].value;
-        // var xData = this.chosenvalue[2].value;
-        // var yData = this.chosenvalue[3].value;
-        // var color = this.chosenvalue[4].value;
-        // var FBR = this.dataPoints;
-        // var aggResult = [];
-        // var currentItem = '';
-        // var aggIndex = 0;
-        // var parser = [];
-
-        // console.log(this.chosenvalue[1].type + " " + this.chosenvalue[1].value);
-        // console.log("X " + this.chosenvalue[2].value);
-        // console.log("Y " + this.chosenvalue[3].value);
-        // console.log("category " + this.chosenvalue[4].value);
-        
-
-        // for (var i = 0; i < FBR.length; i++) {
-        //   if (!currentItem) {
-        //     aggResult.push({title:FBR[i][name], xData:FBR[i][xData], yData:FBR[i][yData], color:color, size:1}); 
-        //     currentItem = FBR[i][category];
-        //   }
-        //   else if (currentItem === FBR[i][category]) {
-        //     aggResult[aggIndex]["size"]++;
-        //     currentItem = FBR[i][category];
-        //   }
-        //   else {
-        //     aggResult.push({title:FBR[i][name], xData:FBR[i][xData], yData:FBR[i][yData], color:color, size:1}); 
-        //     currentItem = FBR[i][category];
-        //     parser.push([ aggResult[aggIndex]["name"], 
-        //                   aggResult[aggIndex]["xData"], 
-        //                   aggResult[aggIndex]["yData"], 
-        //                   aggResult[aggIndex]["color"],
-        //                   aggResult[aggIndex]["size"] ])
-        //     aggIndex++;
-        //   }
-        // }
-        // parser.push([ aggResult[aggIndex]["name"], 
-        //               aggResult[aggIndex]["xData"], 
-        //               aggResult[aggIndex]["yData"], 
-        //               aggResult[aggIndex]["color"],
-        //               aggResult[aggIndex]["size"] ])
-
-        // this.chosenOption = this.chartOptions[this.chartType];
-        // console.log(this.chartOptions.pie);
-        // this.parser = parser;
-
       },
 
 
       // could be more efficient
       makePie: function() {
-        this.chartType = "bubble";
+        this.chartType = "pie";
         this.chosenOption = this.chartOptions[this.chartType];
         var chart = document.querySelector('#selection-chart');
         chart.drawChart();
       },
 
       makeBar: function() {
-        this.chartType = "column";
+        this.chartType = "bubble";
         this.chosenOption = this.chartOptions[this.chartType];
         var chart = document.querySelector('#selection-chart');
         chart.drawChart();
@@ -497,14 +523,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return baseRef + this.firebaseNode //TODO: account for people not putting trailing or beginning slashes. Also, account for data coming from REST/API calls
       },
 
-      buildChart: function() {  //Some Hardcoded information, need to change as soon as possible
-        this.instRef = this.buildRef(this.baseRef);
-         this.firebaseNode = 'expenditures'
-       this.expRef = this.buildRef(this.baseRef);
-         this.firebaseNode = 'gradRates'
-         this.gradRef = this.buildRef(this.baseRef);
-        this.chartData = this.data;
-      }
+      // buildChart: function() {  //Some Hardcoded information, need to change as soon as possible
+      //   this.instRef = this.buildRef(this.baseRef);
+      //    this.firebaseNode = 'expenditures'
+      //  this.expRef = this.buildRef(this.baseRef);
+      //    this.firebaseNode = 'gradRates'
+      //    this.gradRef = this.buildRef(this.baseRef);
+      //   //this.chartData = this.data;
+      // }
     });
   })();
   </script>
