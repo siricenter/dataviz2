@@ -35,7 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       data="{{items}}"></firebase-collection>
 
     <firebase-document id="setTester"
-                        location="https://rbdcdataviz.firebaseio.com/categories/EIFA" 
+                        location="https://datavizimporter.firebaseio.com/categories/EIFA"
                         data="{{setTestItems}}"></firebase-document>
 
     <paper-material elevation="1">
@@ -101,8 +101,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var inst = [];
         var exp = [];
         var eifa = [];
-        //var fredRef2 = new Firebase('https://rbdcdataviz.firebaseio.com/ipedsData/2006');
-        //var fredRef2 = new Firebase('https://smidttesting.firebaseio.com');
+        //var fredRef2 = new Firebase('https://datavizimporter.firebaseio.com/ipedsData/2006');
+        //var fredRef2 = new Firebase('https://datavizimporter.firebaseio.com');
         //fredRef = fredRef.child("2003");
         //fredRef2.remove();
         var fbColl = this.$.fbColl;
@@ -116,7 +116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         //   file = "GR" + year +"_seed";
         //   var data = window[file];
         //   console.log(file);
-        //   fredRef = new Firebase('https://rbdcdataviz.firebaseio.com/setTest/');
+        //   fredRef = new Firebase('https://datavizimporter.firebaseio.com/setTest/');
         //   fredRef = fredRef.child(year);
         //   //var path = fredFirstNameRef.toString();
 

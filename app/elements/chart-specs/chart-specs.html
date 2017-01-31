@@ -61,33 +61,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		</div>
 	</paper-material>
 		 <div class="wrapper">
-			<scrollable-list id="exp" 
-				firebase-ref="https://rbdcdataviz.firebaseio.com/chartTypes/categories/expenditures" 
+			<scrollable-list id="exp"
+				firebase-ref="https://datavizimporter.firebaseio.com/chartTypes/categories/expenditures" 
 				firebase-data="{{fbExpData}}"
-				scroll-selection="{{value1}}" 
+				scroll-selection="{{value1}}"
 				header="Expenditures"
-				chart-type="exp"   
+				chart-type="exp"
 				on-tap="valueChanged" ></scrollable-list>
-			<scrollable-list id="grad" 
-				firebase-ref="https://rbdcdataviz.firebaseio.com/chartTypes/categories/gradRates" 
+			<scrollable-list id="grad"
+				firebase-ref="https://datavizimporter.firebaseio.com/chartTypes/categories/gradRates" 
 				firebase-data="{{fbGradData}}"
-				scroll-selection="{{value2}}" 
-				header="Grad Rates" 
-				chart-type="grad"    
+				scroll-selection="{{value2}}"
+				header="Grad Rates"
+				chart-type="grad"
 				on-tap="valueChanged"></scrollable-list>
-			<scrollable-list id="inst" 
-				firebase-ref="https://rbdcdataviz.firebaseio.com/chartTypes/categories/institutions" 
+			<scrollable-list id="inst"
+				firebase-ref="https://datavizimporter.firebaseio.com/chartTypes/categories/institutions" 
 				firebase-data="{{fbInstData}}"
-				scroll-selection="{{value3}}" 
+				scroll-selection="{{value3}}"
 				header="Institutions"
-				chart-type="inst" 
+				chart-type="inst"
 				on-tap="valueChanged"></scrollable-list>
-			<scrollable-list id="eifa" 
-				firebase-ref="https://rbdcdataviz.firebaseio.com/chartTypes/categories/EIFA" 
+			<scrollable-list id="eifa"
+				firebase-ref="https://datavizimporter.firebaseio.com/chartTypes/categories/EIFA" 
 				firebase-data="{{fbEifaData}}"
-				scroll-selection="{{value4}}" 
+				scroll-selection="{{value4}}"
 				header="EIFA"
-				chart-type="eifa" 
+				chart-type="eifa"
 				on-tap="valueChanged"></scrollable-list>
 		</div>
 
@@ -126,9 +126,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		</paper-material>
 		<h1>{{scroll-selection}}</h1>
 		<div id="log"></div>
-		<chart-example 
-			chosenvalue="[[chosenValues]]" 
-			base-ref="https://rbdcdataviz.firebaseio.com/ipedsData/"
+		<chart-example
+			chosenvalue="[[chosenValues]]"
+			base-ref="https://datavizimporter.firebaseio.com/ipedsData/"
 			fb-exp-data="{{fbExpData}}"
 			fb-inst-data="{{fbInstData}}"
 			fb-grad-data="{{fbGradData}}"
