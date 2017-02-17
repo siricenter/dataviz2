@@ -1,0 +1,68 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="update-firebase">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #sendData {
+        background-color: #29b6f6;
+        margin: 2rem;
+      }
+    </style>
+    <firebase-document id="newData"
+                        path="/jordanHope"
+                        data="{{myData}}"></firebase-document>
+    <div>Let's do this...</div>
+    <paper-button id="sendData" raised>Send Data to Firebase</paper-button>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'update-firebase',
+
+      listeners: {
+        'sendData.tap' : 'pushData'
+      },
+
+      properties: {
+        theObject: {
+          type: Object,
+          value: {
+            fName: 'First',
+            lName: 'Last',
+            name: 'First Last',
+            phone: '888-555-1111',
+            email: 'someEmail@gmail.com',
+            notes: 'Here is a note',
+            school: 'BYUI'
+          },
+          notify: true
+        }
+      },
+
+      pushData: function() {
+        this.myData = this.theObject
+        this.$.newData.save('/jordanHope', 'jordanHope').then(() => {
+          console.log("Bam!!");
+        });
+      }
+    });
+  })();
+  </script>
+</dom-module>
