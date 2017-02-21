@@ -21,8 +21,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply(--layout-horizontal);
         @apply(--layout-around-justified);
         @apply(--layout-center);
+        @apply(--layout-wrap);
         padding: 10px;
       }
+      
+      paper-progress {
+        flex-basis: 100%;
+        margin: 2rem 1rem;
+      }
+
       paper-button {
         background-color: var(--default-primary-color);
         color: var(--text-primary-color);
@@ -42,6 +49,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-input id="dataNode" label="Firebase Node"></paper-input>
       <paper-input id="dataFile" label="Data Location"></paper-input>
       <paper-button raised on-tap="importCategories">import file<iron-icon icon="file-upload"></iron-icon></paper-button>
+      <paper-progress value="10"></paper-progress>
     </paper-material>
   </template>
   <script>
