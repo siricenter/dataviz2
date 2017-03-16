@@ -110,6 +110,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <a data-route="home" href="/"><iron-icon class="icon-menu" icon="home"></iron-icon>Home</a>
               <a data-route="users" href="/users"><iron-icon class="icon-menu" icon="info"></iron-icon>About</a>
               <a data-route="contact" href="/contact"><iron-icon class="icon-menu" icon="mail"></iron-icon>Contact</a>
+              <a data-route="import" href="/import"><iron-icon class="icon-menu" icon="note-add"></iron-icon>Import</a>
             </div>
           </div>
 
@@ -207,6 +208,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-material elevation="1">
                 <h2 class="paper-font-display2">About</h2>
                 <p>This is the About section</p>
+              </paper-material>
+            </section>
+
+            <section data-route="import">
+              <paper-material elevation="1">
+                <importer-view></importer-view>
               </paper-material>
             </section>
 
