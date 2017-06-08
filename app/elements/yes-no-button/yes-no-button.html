@@ -1,0 +1,79 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+When using the yes-no-button tag the tag will scale to its container.  
+To place data into the top part of the circle give the tag you are using
+the id of top-circle.
+To place data into the bottom part of the circle give the tag you are using
+the id of bottom-circle.
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="yes-no-button">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .circle-wrapper {
+        border-top-left-radius: 500px;
+        border-top-right-radius: 500px;
+        border-bottom-left-radius: 500px;
+        border-bottom-right-radius: 500px;
+        border-style: solid;
+        border-color: black;
+        border-width: 5%;
+      }
+      #top-circle {
+        border-top-left-radius: 500px;
+        border-top-right-radius: 500px;
+        background: green;
+      }
+      #bottom-circle {
+        background: red;
+        border-bottom-left-radius: 500px;
+        border-bottom-right-radius: 500px;
+      }
+      #top-circle,
+      #bottom-circle {
+        line-height: 50%;
+        margin: auto;
+        text-align: center;
+      }
+    </style>
+    <div class="circle-wrapper">
+      <div id="top-circle" onmouseover="topMouseOver()" onmouseout="topMouseOut()"><content select="#top-circle"></content></div>
+      <div id="bottom-circle" onmouseover="bottomMouseOver()" onmouseout="bottomMouseOut()"><content select="#bottom-circle"></content></div>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'yes-no-button',
+    });
+  })();
+  function topMouseOver() {
+    document.getElementById("top-circle").style.background = "lightgreen";
+  }
+  function topMouseOut() {
+    document.getElementById("top-circle").style.background = "green";
+  }
+  function bottomMouseOver() {
+    document.getElementById("bottom-circle").style.background = "lightpink";
+  }
+  function bottomMouseOut() {
+    document.getElementById("bottom-circle").style.background = "red";
+  }
+  </script>
+</dom-module>
