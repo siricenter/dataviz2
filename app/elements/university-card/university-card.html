@@ -12,13 +12,108 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="university-card">
   <template>
+      
+<custom-style>
+  <style is="custom-style">
+/*
+      .rate-image {
+          position: fixed;
+          bottom: 0;
+          right: 0;
+          width: 300px;
+          border: 3px solid #73AD21;
+          border-image: url("http://lorempixel.com/400/200");
+      }
+*/
+      #university-card {
+          display: block;
+          position: relative;
+          border: 2px solid blue;
+          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
+          transition: 0.3s;
+          border-radius: 10px;
+          width: 500px;
+          margin: 20px;
+/*          height: 309px;*/
+          
+      }
+      
+      #rate-header {
+          color: darkorange;
+          padding-left: 10px;
+          padding-top: 30px;
+        
+      }
+      #rate-header p {
+          font-size: 10px;
+          color: black;
+      }
+      
+      .card-content{
+          display: -webkit-flex;
+          display: flex;
+          flex-direction: row;
+
+          
+
+      }
+      .card-options{
+          display: -webkit-flex;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+
+      }
+      
+      .card-options img {
+          display: inline-block;
+          padding-left: 20px;
+          width: 30px;
+          height: 30px;
+      }
+
+    }
+  </style>
+</custom-style>
+<paper-card id="university-card">
+
+  <div class="card-content">
+      <img src="http://lorempixel.com/100/100/city">
+    
+    <div id="rate-header">{{title}}
+<!--      <p> Why this school? Click to see the comparison</p>-->
+      </div>
+      <div id=favorite> </div>
+      <div class= "card-options">
+          <img src="/images/fav_heart.png" alt="favorite">
+          <img src="/images/x_image.png" alt="close">
+          <img src="/images/scale.png" alt="scale">
+      </div>
+<!--    <div class="rate-name">Choice X</div>-->
+    
+  </div>
+
+<!--
+  <div class="card-actions">
+    <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+    <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+    <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+    <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+    <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+  </div>
+-->
+  <div class="rate-image"></div>
+</paper-card>
+      
+<!--
     <style>
       :host {
         display: block;
       }
     </style>
-    <div>Hello from <span>{{foo}}</span></div>
-      <h1> This is my UNIVERSITY-CARD element! CAN YOU SEE ME!!!</h1>
+-->
+<!--    <div>Hello from <span>{{foo}}</span></div>-->
   </template>
   <script>
   (function() {
@@ -32,7 +127,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: String,
           value: 'university-card',
           notify: true
-        }
+        },
+        title: {
+            type: String,
+            value: ""
+        },
+        description: {
+            type: String,
+            value: ""
+          }
+          
+        
       }
     });
   })();
