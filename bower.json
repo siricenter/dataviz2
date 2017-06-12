@@ -18,6 +18,7 @@
     "test-fixture": "PolymerElements/test-fixture#^1.0.0"
   },
   "resolutions": {
-    "polymer": "^1.1.0"
+    "polymer": "^1.1.0",
+    "test-fixture": "^3.0.0-rc.1"
   }
 }

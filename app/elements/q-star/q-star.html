@@ -1,0 +1,165 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\..\bower_components/paper-material/paper-material.html">
+<link rel="import" href="..\..\bower_components/paper-card/paper-card.html">
+<link rel="import" href="..\..\bower_components/paper-icon-button/paper-icon-button.html">
+
+
+
+<dom-module id="q-star">
+  <template>
+    <style>
+        :host {
+            font-size: 3.7vw;
+        } /* set font size of element, all sizes SHOULD be scaled to the font size */
+        paper-card{
+            display: grid;
+            grid-template-columns: 22.2vw auto;
+            grid-template-rows: auto auto;
+            /*
+            1             2                         3
+            ========================================= 1
+            |             |                         |
+            |   w 200px   |        auto             |
+            |             |                         |
+            |_____________|_________________________| 2
+            |             |                         |
+            |    auto     |        auto             |
+            ========================================= 3
+
+            */
+            min-width: 269px;
+            margin: 2vw;
+        } /* overall grid layout, as well as margins around the 'card' */
+        #schoolPhoto {
+            /* grid */
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+
+            width: 100%;
+        } /* width so photo always fits grid it's inside */
+        #schoolCardInfo{
+            /* grid */
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+            /* get rid of list styling, padding between img and text */
+            list-style: none;
+            padding: .8em 0 0 .8em;
+            margin: 0;
+        } /* remove list styling */
+        #titleBar{
+            /* grid */
+            grid-column: 1 / span 3;
+            grid-row: 2 / 3;
+            /* arrange the uni name and icons */
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            align-items: center;
+        } /* arrangement of the school name and buttons */
+        #titleBar h2 {
+            /* Uni name sizes */
+            font-size: 1em;
+        } /* school name font size  */
+        paper-icon-button {
+            min-height: 2.75em;
+            min-width: 2.75em;
+        } /* size of the icon buttons (em based) */
+    </style>
+    <paper-card>
+        <img src="http://lorempixel.com/{{imgSize}}/{{imgSize}}/" alt="lorempixel" id="schoolPhoto"> <!-- see imgsize property -->
+        <ul id="schoolCardInfo">
+            <li>{{schoolCardInfo.info1.field}}{{schoolCardInfo.info1.value}}</li>
+            <li>{{schoolCardInfo.info2.field}}{{schoolCardInfo.info2.value}}</li>
+            <li>{{schoolCardInfo.info3.field}}{{schoolCardInfo.info3.value}}</li>
+            <li>{{schoolCardInfo.info4.field}}{{schoolCardInfo.info4.value}}</li>
+        </ul>
+        <section id="titleBar">
+            <h2>{{title}}</h2>
+            <div id="iconContainer">
+                <paper-icon-button icon="favorite" id="favorite" on-tap="iconTap"></paper-icon-button>
+                <paper-icon-button icon="close" id="close" on-tap="iconTap"></paper-icon-button>
+                <paper-icon-button icon="compare-arrows" id="cArrows" on-tap="iconTap"></paper-icon-button>
+                <!-- Library-Add not-interested filter compare-arrows compare content-copy-->
+            </div>
+        </section>
+
+    </paper-card>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+
+    Polymer({
+      is: 'q-star',
+
+      properties: {
+          title: { // ideally this comes from database
+            type: String,
+            value: 'University of Lorem Ipsum',
+            notify: true
+        },
+          schoolCardInfo: { // Ideally this would be pulled from database as well
+              type: Object,
+              value: {
+                      info1: {
+                          field: 'School Info 1: ',
+                          value: 'You like this!'
+                      },
+                      info2: {
+                          field: 'School Info 2: ',
+                          value: 'You don\'t like this!'
+                      },
+                      info3: {
+                          field: 'School Info 3: ',
+                          value: 'You might like this.'
+                      },
+                      info4: {
+                          field: 'Open Console: ',
+                          value: 'To see buttons are working.'
+                      }
+              }
+        },
+          favorite: {
+              type: Boolean,
+              value: false,
+              notify: true
+        },
+          imgSize: {
+            type: Number,
+            value: function() { // Change the dividing number to change the size of the picture returned from LoremPixel. Currently set to never go over 200 pixels
+                var size = Math.round(window.innerWidth / 4.5)
+                if (size <= 200){
+                    return size;
+                } else return 200;
+            },
+            notify: true
+        }
+      },
+        iconTap: function(e) {
+            if (e.target.icon == "favorite") { // Favorite button handle
+                this.favorite = !this.favorite;
+                if(this.favorite == true){ this.$.favorite.style.color = "red"; }
+                    else { this.$.favorite.style.color = "initial"; }
+                console.log("Is this school Favorited? " + this.favorite);
+            } else if (e.target.icon == 'close'){ // Close button handle
+                console.log('This would normally remove the card');
+            } else if (e.target.icon == 'compare-arrows'){ // compare button handle
+                console.log('This would normally link to the School Info Screen of the card');
+            }
+        }
+
+    });
+  })();
+  </script>
+</dom-module>
