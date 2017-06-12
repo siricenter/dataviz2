@@ -1,0 +1,46 @@
+[14:08:25] Working directory changed to ~/projects/dataviz2
+[14:08:26] Using gulpfile ~/projects/dataviz2/gulpfile.js
+(node:5463) DeprecationWarning: os.tmpDir() is deprecated. Use os.tmpdir() instead.
+[14:08:26] Starting 'styles'...
+[14:08:26] Starting 'elements'...
+[14:08:26] Starting 'images'...
+[14:08:26] Finished 'elements' after 343 ms
+[14:08:27] styles all files 257 B
+[14:08:27] Finished 'styles' after 995 ms
+[14:08:27] images all files 1.5 MB
+[14:08:27] Finished 'images' after 828 ms
+[14:08:27] Starting 'serve'...
+[14:08:27] Finished 'serve' after 96 ms
+[PSK] Access URLs:
+ -------------------------------------
+       Local: http://localhost:3000
+    External: http://10.38.160.24:3000
+ -------------------------------------
+          UI: http://localhost:3001
+ UI External: http://10.38.160.24:3001
+ -------------------------------------
+[PSK] Serving files from: .tmp
+[PSK] Serving files from: app
+[14:08:59] Working directory changed to ~/projects/dataviz2
+[14:09:00] Using gulpfile ~/projects/dataviz2/gulpfile.js
+(node:5469) DeprecationWarning: os.tmpDir() is deprecated. Use os.tmpdir() instead.
+[14:09:00] Starting 'styles'...
+[14:09:01] Starting 'elements'...
+[14:09:01] Starting 'images'...
+[14:09:01] Finished 'elements' after 318 ms
+[14:09:01] styles all files 257 B
+[14:09:01] Finished 'styles' after 977 ms
+[14:09:02] images all files 1.5 MB
+[14:09:02] Finished 'images' after 796 ms
+[14:09:02] Starting 'serve'...
+[14:09:02] Finished 'serve' after 97 ms
+[PSK] Access URLs:
+ -------------------------------------
+       Local: http://localhost:3000
+    External: http://10.38.160.24:3000
+ -------------------------------------
+          UI: http://localhost:3001
+ UI External: http://10.38.160.24:3001
+ -------------------------------------
+[PSK] Serving files from: .tmp
+[PSK] Serving files from: app
