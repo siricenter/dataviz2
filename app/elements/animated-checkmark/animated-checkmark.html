@@ -8,7 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
 
 <dom-module id="animated-checkmark">
   <template>
@@ -19,38 +19,64 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #checkmark {
         --iron-icon-height: 500px;
         --iron-icon-width: 500px;
-        -webkit-animation: iron-icon 2s infinite;
-        animation: iron-icon 2s infinite;
       }
-      @-webkit-keyframes iron-icon {
-          0%  {fill: white;}
-          50% {fill: greenyellow;}
-          100% {fill: white;}
-}
-      @keyframes iron-icon {
-          0%  {fill: white;}
-          50% {fill: greenyellow;}
-          100% {fill: white;}
-}
+      #text {
+        width: 50%;
+        text-align: center;
+      }
     </style>
-    <iron-icon icon="check" id="checkmark">
+    <iron-icon icon="check" id="checkmark" on-tap="animate" style$="fill: {{icon-color}};">
     </iron-icon>
+    <div id="text" style$="color: {{text-color}};"><b><i>Your results are ready!</b></i></div>
   </template>
+</dom-module>
   <script>
   (function() {
     'use strict';
 
     Polymer({
       is: 'animated-checkmark',
+      behaviors: [
+        Polymer.NeonAnimationRunnerBehavior
+      ],
 
       properties: {
+        animationConfig: {
+          type: Object,
+          value: function() {
+            return {
+              'first': {
+                name: 'scale-up-animation',
+                node: this.$.checkmark,
+                timing: {duration: 4000}
+              },
+              'second': {
+                name: 'fade-in-animation',
+                node: this.$.text,
+                timing: {delay: 4000}
+              }
+                
+            };
+          }
+        },
         foo: {
           type: String,
           value: 'animated-checkmark',
           notify: true
         }
-      }
+      },
+        listeners: {
+    // this event is fired when the animation finishes
+    'neon-animation-finish': '_onNeonAnimationFinish'
+  },
+  ready: function() {
+    // run animation
+    this.playAnimation('first');
+    this.playAnimation('second');    
+  },
+  _onNeonAnimationFinish: function() {
+    console.log('animation done!');  
+  }
     });
   })();
   </script>
-</dom-module>
