@@ -8,16 +8,36 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-
 <dom-module id="nav-bar">
   <template>
     <style>
       :host {
         display: block;
       }
+       nav {
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        font-weight: bold;
+        font-size: 200%;
+      }
+      a {
+        text-decoration: none;
+        color: black;
+      }
+      a:visited {
+        color: blue;
+      }
+      a:hover {
+        background-color: lightgray;
+      }
+      a:active {
+        background-color: red;
+      }
     </style>
-    <div>Hello from <span>{{foo}}</span></div>
+    <nav>
+      <content>
+        
+      </content>
+</nav>
   </template>
   <script>
   (function() {
@@ -31,9 +51,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: String,
           value: 'nav-bar',
           notify: true
+        },
+        navFont: {
+          
         }
       }
     });
   })();
   </script>
 </dom-module>
+
